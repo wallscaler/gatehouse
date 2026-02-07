@@ -15,6 +15,7 @@ import {
   KeyRound,
   Key,
   Webhook,
+  AppWindow,
   Pickaxe,
   ShieldAlert,
 } from "lucide-react";
@@ -26,6 +27,7 @@ import { cn } from "@/lib/utils";
 const platformLinks = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/compute", label: "Compute", icon: Server },
+  { href: "/apps", label: "Apps", icon: AppWindow },
   { href: "/instances", label: "My Instances", icon: Box },
   { href: "/ssh-keys", label: "SSH Keys", icon: KeyRound },
 ];
