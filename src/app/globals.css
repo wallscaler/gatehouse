@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #1B3D2F;
+  --forest: #2D5A47;
+  --deep-moss: #1B3D2F;
+  --soft-sage: #F7FAF8;
+  --warm-stone: #F2F0ED;
+  --fern: #4A7C59;
+  --evergreen: #234338;
+  --mist: #E8EFEB;
+  --lichen: #A8C5B5;
+  --copper: #B87333;
+  --card: #ffffff;
+  --card-foreground: #1B3D2F;
+  --border: #E8EFEB;
+  --muted: #F2F0ED;
+  --muted-foreground: #6b7f75;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-forest: var(--forest);
+  --color-deep-moss: var(--deep-moss);
+  --color-soft-sage: var(--soft-sage);
+  --color-warm-stone: var(--warm-stone);
+  --color-fern: var(--fern);
+  --color-evergreen: var(--evergreen);
+  --color-mist: var(--mist);
+  --color-lichen: var(--lichen);
+  --color-copper: var(--copper);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0f0d;
+    --foreground: #E8EFEB;
+    --card: #111916;
+    --card-foreground: #E8EFEB;
+    --border: #1B3D2F;
+    --muted: #111916;
+    --muted-foreground: #A8C5B5;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
