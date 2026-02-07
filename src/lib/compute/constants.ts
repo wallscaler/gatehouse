@@ -120,30 +120,30 @@ export const STATUS_CONFIG: Record<
   { label: string; color: string; bgColor: string }
 > = {
   // Validation / approval statuses
-  pending: { label: "Pending", color: "#B87333", bgColor: "#FFF7ED" },
-  verified: { label: "Verified", color: "#2D5A47", bgColor: "#F7FAF8" },
-  rejected: { label: "Rejected", color: "#DC2626", bgColor: "#FEF2F2" },
+  pending: { label: "Pending", color: "#FFB800", bgColor: "#1a1600" },
+  verified: { label: "Verified", color: "#4CC9F0", bgColor: "#0a1520" },
+  rejected: { label: "Rejected", color: "#DC2626", bgColor: "#1a0a0a" },
 
   // Container statuses
-  running: { label: "Running", color: "#2D5A47", bgColor: "#F7FAF8" },
-  stopped: { label: "Stopped", color: "#6B7280", bgColor: "#F9FAFB" },
-  terminated: { label: "Terminated", color: "#DC2626", bgColor: "#FEF2F2" },
-  failed: { label: "Failed", color: "#DC2626", bgColor: "#FEF2F2" },
+  running: { label: "Running", color: "#4CC9F0", bgColor: "#0a1520" },
+  stopped: { label: "Stopped", color: "#6B7280", bgColor: "#111318" },
+  terminated: { label: "Terminated", color: "#DC2626", bgColor: "#1a0a0a" },
+  failed: { label: "Failed", color: "#DC2626", bgColor: "#1a0a0a" },
 
   // Health statuses
-  healthy: { label: "Healthy", color: "#2D5A47", bgColor: "#F7FAF8" },
-  warning: { label: "Warning", color: "#B87333", bgColor: "#FFF7ED" },
-  critical: { label: "Critical", color: "#DC2626", bgColor: "#FEF2F2" },
+  healthy: { label: "Healthy", color: "#4CC9F0", bgColor: "#0a1520" },
+  warning: { label: "Warning", color: "#FFB800", bgColor: "#1a1600" },
+  critical: { label: "Critical", color: "#DC2626", bgColor: "#1a0a0a" },
 
   // Miner statuses
-  active: { label: "Active", color: "#2D5A47", bgColor: "#F7FAF8" },
-  inactive: { label: "Inactive", color: "#6B7280", bgColor: "#F9FAFB" },
-  suspended: { label: "Suspended", color: "#DC2626", bgColor: "#FEF2F2" },
+  active: { label: "Active", color: "#4CC9F0", bgColor: "#0a1520" },
+  inactive: { label: "Inactive", color: "#6B7280", bgColor: "#111318" },
+  suspended: { label: "Suspended", color: "#DC2626", bgColor: "#1a0a0a" },
 
   // Payment statuses
-  paid: { label: "Paid", color: "#2D5A47", bgColor: "#F7FAF8" },
-  succeeded: { label: "Succeeded", color: "#2D5A47", bgColor: "#F7FAF8" },
-  refunded: { label: "Refunded", color: "#6B7280", bgColor: "#F9FAFB" },
+  paid: { label: "Paid", color: "#4CC9F0", bgColor: "#0a1520" },
+  succeeded: { label: "Succeeded", color: "#4CC9F0", bgColor: "#0a1520" },
+  refunded: { label: "Refunded", color: "#6B7280", bgColor: "#111318" },
 };
 
 // ─── Regions ─────────────────────────────────────────────────

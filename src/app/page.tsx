@@ -7,7 +7,7 @@ import { Features } from "@/components/landing/features";
 import { Pricing } from "@/components/landing/pricing";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
-import { Shield, Pickaxe, ArrowRight } from "lucide-react";
+import { Pickaxe, ArrowRight } from "lucide-react";
 
 export default function Home() {
   return (
@@ -17,9 +17,9 @@ export default function Home() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
-              <Shield className="h-6 w-6 text-forest" />
+              <img src="/logo-mark-white.svg" alt="Polaris" className="h-6 w-6" />
               <span className="text-lg font-semibold text-deep-moss">
-                Gatehouse
+                Polaris
               </span>
             </Link>
             <div className="hidden items-center gap-6 sm:flex">
@@ -79,7 +79,7 @@ export default function Home() {
                   Got idle GPUs? Start earning.
                 </h2>
                 <p className="mt-2 text-muted-foreground">
-                  List your hardware on Gatehouse and earn revenue from
+                  List your hardware on Polaris Cloud and earn revenue from
                   researchers and teams who need compute. Set your own prices,
                   manage availability, and get paid through Paystack.
                 </p>

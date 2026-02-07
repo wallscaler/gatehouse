@@ -3,9 +3,9 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
-  title: "Documentation — Gatehouse",
+  title: "Documentation — Polaris Cloud",
   description:
-    "Developer documentation for Gatehouse. Learn how to set up Clerk authentication and Paystack billing for your African SaaS.",
+    "Developer documentation for Polaris Cloud. Learn how to set up Clerk authentication and Paystack billing for your African SaaS.",
 };
 
 const sections = [
@@ -83,7 +83,7 @@ export default function DocsPage() {
       <div className="mb-12">
         <Badge className="mb-4">Documentation</Badge>
         <h1 className="text-3xl font-bold text-foreground sm:text-4xl">
-          Gatehouse Developer Docs
+          Polaris Cloud Developer Docs
         </h1>
         <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
           Everything you need to set up Clerk authentication and Paystack
@@ -118,7 +118,7 @@ export default function DocsPage() {
               Quick Start
             </h2>
             <p className="mb-6 text-muted-foreground">
-              Get Gatehouse running locally in under five minutes.
+              Get Polaris Cloud running locally in under five minutes.
             </p>
 
             <div className="space-y-6">
@@ -126,8 +126,8 @@ export default function DocsPage() {
                 <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-lichen">
                   1. Clone the repository
                 </h3>
-                <CodeBlock>{`git clone https://github.com/your-org/gatehouse.git
-cd gatehouse`}</CodeBlock>
+                <CodeBlock>{`git clone https://github.com/your-org/polaris-cloud.git
+cd polaris-cloud`}</CodeBlock>
               </div>
 
               <div>
@@ -157,7 +157,7 @@ PAYSTACK_SECRET_KEY=sk_test_...
 PAYSTACK_PUBLIC_KEY=pk_test_...
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 
-DATABASE_URL=postgresql://user:pass@localhost:5432/gatehouse`}</CodeBlock>
+DATABASE_URL=postgresql://user:pass@localhost:5432/polaris`}</CodeBlock>
               </div>
 
               <div>
@@ -190,7 +190,7 @@ npx prisma generate`}</CodeBlock>
               Authentication
             </h2>
             <p className="mb-6 text-muted-foreground">
-              Gatehouse uses{" "}
+              Polaris Cloud uses{" "}
               <span className="text-foreground font-medium">Clerk</span> for
               authentication. User sessions, sign-up/sign-in flows, and user
               management are all handled by Clerk's hosted components.
@@ -206,7 +206,7 @@ npx prisma generate`}</CodeBlock>
                   <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs text-forest">
                     {"<ClerkProvider>"}
                   </code>{" "}
-                  with dark mode appearance variables that match the Gatehouse
+                  with dark mode appearance variables that match the Polaris Cloud
                   palette.
                 </p>
                 <CodeBlock>{`// src/app/layout.tsx
@@ -288,7 +288,7 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
             <p className="mb-6 text-muted-foreground">
               Billing is powered by{" "}
               <span className="text-foreground font-medium">Paystack</span>,
-              the leading payment gateway across Africa. Gatehouse handles plan
+              the leading payment gateway across Africa. Polaris Cloud handles plan
               selection, transaction initialization, and webhook processing out
               of the box.
             </p>
@@ -396,7 +396,7 @@ window.location.href = authorization_url;`}</CodeBlock>
               Database
             </h2>
             <p className="mb-6 text-muted-foreground">
-              Gatehouse uses{" "}
+              Polaris Cloud uses{" "}
               <span className="text-foreground font-medium">Prisma</span> with
               PostgreSQL. The schema tracks users, subscriptions, teams, and
               invoices.
@@ -478,7 +478,7 @@ if (!user) {
               Deployment
             </h2>
             <p className="mb-6 text-muted-foreground">
-              Gatehouse is designed to deploy on{" "}
+              Polaris Cloud is designed to deploy on{" "}
               <span className="text-foreground font-medium">Vercel</span> with
               zero configuration. Just connect your repo and set the environment
               variables.
@@ -489,7 +489,7 @@ if (!user) {
                 <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-lichen">
                   1. Push to GitHub
                 </h3>
-                <CodeBlock>{`git remote add origin https://github.com/your-org/gatehouse.git
+                <CodeBlock>{`git remote add origin https://github.com/your-org/polaris-cloud.git
 git push -u origin main`}</CodeBlock>
               </div>
 

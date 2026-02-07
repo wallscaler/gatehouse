@@ -54,8 +54,8 @@ export function Sidebar() {
   return (
     <aside className="hidden w-64 border-r border-border bg-soft-sage md:flex md:flex-col">
       <div className="flex h-16 items-center gap-2 border-b border-border px-6">
-        <Shield className="h-6 w-6 text-forest" />
-        <span className="text-lg font-semibold text-deep-moss">Gatehouse</span>
+        <img src="/logo-mark-white.svg" alt="Polaris" className="h-6 w-6" />
+        <span className="text-lg font-semibold text-deep-moss">Polaris</span>
       </div>
       <nav className="flex flex-1 flex-col gap-1 p-4">
         {/* Platform section */}

@@ -1,20 +1,20 @@
 // ─── GPU Source Obfuscation Layer ─────────────────────────────
 // Masks hardware provider details, IPs, and identifiers so that
-// users only see Gatehouse-branded resource information.
+// users only see Polaris-branded resource information.
 
 import type { ComputeResource } from "@/lib/db/schema";
 
-// ─── Gatehouse Resource ID Generation ─────────────────────────
+// ─── Polaris Resource ID Generation ─────────────────────────
 
 /**
- * Convert an internal resource ID to a Gatehouse-branded public ID.
- * Maps "res-gpu-001" → "gh-gpu-a7x3k9" using a deterministic hash.
+ * Convert an internal resource ID to a Polaris-branded public ID.
+ * Maps "res-gpu-001" → "pl-gpu-a7x3k9" using a deterministic hash.
  */
 export function toPublicResourceId(internalId: string): string {
   const hash = simpleHash(internalId);
   const suffix = hash.toString(36).slice(0, 6);
   const type = internalId.includes("gpu") ? "gpu" : "cpu";
-  return `gh-${type}-${suffix}`;
+  return `pl-${type}-${suffix}`;
 }
 
 /**
@@ -33,24 +33,24 @@ function simpleHash(str: string): number {
 
 /**
  * GPU model mapping — replaces raw NVIDIA/AMD identifiers with
- * Gatehouse-branded tier names. Users never see the actual GPU model.
+ * Polaris-branded tier names. Users never see the actual GPU model.
  */
 const GPU_BRAND_MAP: Record<string, { tier: string; label: string; class: string }> = {
-  "NVIDIA RTX 3060":    { tier: "Starter",    label: "Gatehouse G1",        class: "entry" },
-  "NVIDIA RTX 3090":    { tier: "Pro",        label: "Gatehouse G3 Pro",    class: "mid" },
-  "NVIDIA RTX 4090":    { tier: "Ultra",      label: "Gatehouse G4 Ultra",  class: "high" },
-  "NVIDIA A100 40GB":   { tier: "Enterprise", label: "Gatehouse A1",        class: "enterprise" },
-  "NVIDIA A100 80GB":   { tier: "Enterprise+",label: "Gatehouse A1 Max",    class: "enterprise" },
-  "NVIDIA H100":        { tier: "Apex",       label: "Gatehouse H1 Apex",   class: "apex" },
+  "NVIDIA RTX 3060":    { tier: "Starter",    label: "Polaris G1",        class: "entry" },
+  "NVIDIA RTX 3090":    { tier: "Pro",        label: "Polaris G3 Pro",    class: "mid" },
+  "NVIDIA RTX 4090":    { tier: "Ultra",      label: "Polaris G4 Ultra",  class: "high" },
+  "NVIDIA A100 40GB":   { tier: "Enterprise", label: "Polaris A1",        class: "enterprise" },
+  "NVIDIA A100 80GB":   { tier: "Enterprise+",label: "Polaris A1 Max",    class: "enterprise" },
+  "NVIDIA H100":        { tier: "Apex",       label: "Polaris H1 Apex",   class: "apex" },
 };
 
 /**
- * Convert a raw GPU model string to a Gatehouse-branded name.
+ * Convert a raw GPU model string to a Polaris-branded name.
  */
 export function obfuscateGpuModel(rawModel: string | null): string | null {
   if (!rawModel) return null;
   const mapped = GPU_BRAND_MAP[rawModel];
-  return mapped ? mapped.label : `Gatehouse Compute ${rawModel.replace(/NVIDIA|AMD|GeForce|Radeon/gi, "").trim()}`;
+  return mapped ? mapped.label : `Polaris Compute ${rawModel.replace(/NVIDIA|AMD|GeForce|Radeon/gi, "").trim()}`;
 }
 
 /**
@@ -78,11 +78,11 @@ export function getGpuClass(rawModel: string | null): string {
  */
 export function obfuscateCpuModel(rawModel: string | null, cores?: number | null): string {
   if (!rawModel) return "Unknown";
-  if (cores && cores >= 64) return `Gatehouse HPC ${cores}-Core`;
-  if (cores && cores >= 32) return `Gatehouse Server ${cores}-Core`;
-  if (cores && cores >= 16) return `Gatehouse Pro ${cores}-Core`;
-  if (cores && cores >= 8) return `Gatehouse Standard ${cores}-Core`;
-  return `Gatehouse Compute ${cores ?? "??"}-Core`;
+  if (cores && cores >= 64) return `Polaris HPC ${cores}-Core`;
+  if (cores && cores >= 32) return `Polaris Server ${cores}-Core`;
+  if (cores && cores >= 16) return `Polaris Pro ${cores}-Core`;
+  if (cores && cores >= 8) return `Polaris Standard ${cores}-Core`;
+  return `Polaris Compute ${cores ?? "??"}-Core`;
 }
 
 // ─── IP Address Masking ──────────────────────────────────────
@@ -100,9 +100,9 @@ export function maskIpAddress(ip: string | null): string {
 // ─── Provider Name Masking ───────────────────────────────────
 
 /**
- * Generate a Gatehouse datacenter name from a region + miner ID.
+ * Generate a Polaris datacenter name from a region + miner ID.
  * Instead of showing "Lagos GPU Farm" (the miner name), show
- * "Gatehouse DC — Lagos (West Africa)" etc.
+ * "Polaris DC — Lagos (West Africa)" etc.
  */
 const REGION_LABELS: Record<string, string> = {
   Lagos:      "West Africa",
@@ -114,9 +114,9 @@ const REGION_LABELS: Record<string, string> = {
 };
 
 export function obfuscateProviderName(region: string | null): string {
-  if (!region) return "Gatehouse Cloud";
+  if (!region) return "Polaris Cloud";
   const zoneLabel = REGION_LABELS[region] ?? "Global";
-  return `Gatehouse DC — ${region} (${zoneLabel})`;
+  return `Polaris DC — ${region} (${zoneLabel})`;
 }
 
 // ─── Full Resource Obfuscation ───────────────────────────────
@@ -125,17 +125,17 @@ export function obfuscateProviderName(region: string | null): string {
  * Fields that are safe to expose to end users (obfuscated).
  */
 export interface ObfuscatedResource {
-  id: string;               // gh-gpu-xxx (not internal ID)
+  id: string;               // pl-gpu-xxx (not internal ID)
   type: "gpu" | "cpu";
   gpuTier: string;          // "Pro", "Ultra", "Enterprise", etc.
-  gpuLabel: string | null;  // "Gatehouse G3 Pro"
-  cpuLabel: string;         // "Gatehouse Pro 16-Core"
+  gpuLabel: string | null;  // "Polaris G3 Pro"
+  cpuLabel: string;         // "Polaris Pro 16-Core"
   ramGb: number | null;
   storageGb: number | null;
   storageType: string | null;
   region: string | null;
   country: string | null;
-  datacenter: string;       // "Gatehouse DC — Lagos (West Africa)"
+  datacenter: string;       // "Polaris DC — Lagos (West Africa)"
   hourlyPrice: number | null;
   isAvailable: boolean;
   gpuCount: number | null;
@@ -147,7 +147,7 @@ export interface ObfuscatedResource {
  * Transform a raw ComputeResource into an obfuscated version
  * safe for public API responses and user-facing UI.
  *
- * - Internal IDs replaced with Gatehouse-branded IDs
+ * - Internal IDs replaced with Polaris-branded IDs
  * - GPU/CPU model names replaced with tier labels
  * - IP addresses masked
  * - Provider/miner names replaced with datacenter labels

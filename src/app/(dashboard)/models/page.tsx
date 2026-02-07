@@ -45,62 +45,62 @@ interface AIModel {
   license: string;
   description: string;
   popular: boolean;
-  gatehouseOptimized: boolean;
+  polarisOptimized: boolean;
 }
 
 // ---------------------------------------------------------------------------
-// Model data — Gatehouse Optimized models first, then community
+// Model data — Polaris Optimized models first, then community
 // ---------------------------------------------------------------------------
 
 const MOCK_MODELS: AIModel[] = [
-  // Gatehouse Optimized (real inference backing)
+  // Polaris Optimized (real inference backing)
   {
     id: "llama-3.3-70b",
     name: "Llama 3.3 70B",
-    creator: "Gatehouse AI",
+    creator: "Polaris AI",
     category: "Text Generation",
     params: "70B",
-    license: "Gatehouse Inference",
+    license: "Polaris Inference",
     description:
       "Flagship text model with excellent reasoning and instruction-following across diverse tasks.",
     popular: true,
-    gatehouseOptimized: true,
+    polarisOptimized: true,
   },
   {
     id: "llama-3.1-8b",
     name: "Llama 3.1 8B",
-    creator: "Gatehouse AI",
+    creator: "Polaris AI",
     category: "Text Generation",
     params: "8B",
-    license: "Gatehouse Inference",
+    license: "Polaris Inference",
     description:
       "Fast, lightweight model optimized for low-latency responses with strong general capabilities.",
     popular: true,
-    gatehouseOptimized: true,
+    polarisOptimized: true,
   },
   {
     id: "mixtral-8x7b",
     name: "Mixtral 8x7B",
-    creator: "Gatehouse AI",
+    creator: "Polaris AI",
     category: "Text Generation",
     params: "46.7B (MoE)",
-    license: "Gatehouse Inference",
+    license: "Polaris Inference",
     description:
       "Mixture-of-experts architecture delivering strong reasoning and analytical performance.",
     popular: false,
-    gatehouseOptimized: true,
+    polarisOptimized: true,
   },
   {
     id: "gemma2-9b",
     name: "Gemma 2 9B",
-    creator: "Gatehouse AI",
+    creator: "Polaris AI",
     category: "Text Generation",
     params: "9B",
-    license: "Gatehouse Inference",
+    license: "Polaris Inference",
     description:
       "Efficient instruction-tuned model with strong performance for its size class.",
     popular: false,
-    gatehouseOptimized: true,
+    polarisOptimized: true,
   },
   // Community / self-hosted models
   {
@@ -113,7 +113,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "High-performance 7B model with sliding window attention, excelling at coding and reasoning tasks.",
     popular: true,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "deepseek-coder-v2",
@@ -125,7 +125,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Specialized code generation model supporting 338+ programming languages with fill-in-the-middle capability.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "qwen-2.5-7b",
@@ -137,7 +137,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Strong general-purpose model with excellent performance on benchmarks and multilingual understanding.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "stable-diffusion-xl",
@@ -149,7 +149,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Industry-leading image generation model producing photorealistic and artistic images from text prompts.",
     popular: true,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "flux-1-schnell",
@@ -161,7 +161,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Ultra-fast image generation model delivering high-quality outputs with significantly reduced inference time.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "whisper-large-v3",
@@ -173,7 +173,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "State-of-the-art speech recognition model supporting 100+ languages with robust transcription accuracy.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "bge-m3",
@@ -185,7 +185,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Multilingual embedding model supporting 100+ languages, ideal for semantic search and RAG pipelines.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "llava-1.6",
@@ -197,7 +197,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Multimodal vision-language model capable of understanding images and answering questions about visual content.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "codellama-34b",
@@ -209,7 +209,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Large-scale code-specialized model excelling at code completion, generation, and understanding across languages.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
 ];
 
@@ -433,7 +433,7 @@ export default function ModelHubPage() {
             <Link key={model.id} href={`/models/${model.id}`}>
               <Card className={cn(
                 "group h-full transition-colors hover:border-forest/40",
-                model.gatehouseOptimized && "border-forest/20"
+                model.polarisOptimized && "border-forest/20"
               )}>
                 <CardContent className="flex h-full flex-col p-5">
                   {/* Top row: category + badges */}
@@ -448,10 +448,10 @@ export default function ModelHubPage() {
                         {categoryIcon(model.category)}
                         {model.category}
                       </div>
-                      {model.gatehouseOptimized && (
+                      {model.polarisOptimized && (
                         <div className="inline-flex items-center gap-1 rounded-full bg-forest/15 px-2 py-0.5 text-xs font-semibold text-forest">
                           <Zap className="h-3 w-3" />
-                          Gatehouse Optimized
+                          Polaris Optimized
                         </div>
                       )}
                     </div>
@@ -494,14 +494,14 @@ export default function ModelHubPage() {
                       className="h-7 px-3 text-xs"
                       onClick={(e) => {
                         e.preventDefault();
-                        if (model.gatehouseOptimized) {
+                        if (model.polarisOptimized) {
                           window.location.href = "/models/playground";
                         } else {
                           window.location.href = `/models/${model.id}`;
                         }
                       }}
                     >
-                      {model.gatehouseOptimized ? "Try Now" : "Deploy"}
+                      {model.polarisOptimized ? "Try Now" : "Deploy"}
                     </Button>
                   </div>
                 </CardContent>

@@ -283,7 +283,7 @@ export default function AppDetailPage() {
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Access URL</span>
                   <code className="rounded bg-background px-2 py-0.5 font-mono text-xs text-fern">
-                    https://{app.id}.{resource?.id}.gatehouse.cloud:{app.defaultPort}
+                    https://{app.id}.{resource?.id}.polariscloud.ai:{app.defaultPort}
                   </code>
                 </div>
                 <div className="flex items-center justify-between text-sm">
@@ -305,7 +305,7 @@ export default function AppDetailPage() {
               </div>
 
               <div className="flex gap-3">
-                <Button className="flex-1 gap-2" onClick={() => window.open(`https://${app.id}.${resource?.id}.gatehouse.cloud`, "_blank")}>
+                <Button className="flex-1 gap-2" onClick={() => window.open(`https://${app.id}.${resource?.id}.polariscloud.ai`, "_blank")}>
                   <ExternalLink className="h-4 w-4" />
                   Open App
                 </Button>

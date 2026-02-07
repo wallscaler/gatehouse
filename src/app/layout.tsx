@@ -14,9 +14,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gatehouse — Auth + Payments for African SaaS",
+  title: "Polaris Cloud — GPU & CPU Compute for Africa",
   description:
-    "Clerk authentication + Paystack billing, wired together. The SaaS starter kit for Africa.",
+    "Instant access to GPU and CPU compute power. Built for AI, machine learning, and high-performance computing across Africa and beyond.",
+  icons: {
+    icon: "/favicon-blue.png",
+  },
 };
 
 export default function RootLayout({
@@ -29,7 +32,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClerkProvider dynamic appearance={{ baseTheme: undefined, variables: { colorBackground: "#111916", colorText: "#E8EFEB", colorPrimary: "#3D7A5F", colorInputBackground: "#151d19", colorInputText: "#E8EFEB" } }}>
+        <ClerkProvider dynamic appearance={{ baseTheme: undefined, variables: { colorBackground: "#0c0f20", colorText: "#E4E7F1", colorPrimary: "#2222D6", colorInputBackground: "#0e1128", colorInputText: "#E4E7F1" } }}>
           {children}
         </ClerkProvider>
       </body>

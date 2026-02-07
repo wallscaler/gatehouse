@@ -32,7 +32,7 @@ const MOCK_BUCKETS: Bucket[] = [
     storageUsed: "15.2 GB",
     storageBytes: 15_200_000_000,
     createdAt: "2025-12-07T10:30:00Z",
-    endpoint: "https://s3.lagos.gatehouse.cloud/ml-datasets",
+    endpoint: "https://s3.lagos.polariscloud.ai/ml-datasets",
   },
   {
     id: "bkt-4d5e6f",
@@ -44,7 +44,7 @@ const MOCK_BUCKETS: Bucket[] = [
     storageUsed: "28.1 GB",
     storageBytes: 28_100_000_000,
     createdAt: "2026-01-07T14:00:00Z",
-    endpoint: "https://s3.lagos.gatehouse.cloud/model-weights",
+    endpoint: "https://s3.lagos.polariscloud.ai/model-weights",
   },
   {
     id: "bkt-7g8h9i",
@@ -56,7 +56,7 @@ const MOCK_BUCKETS: Bucket[] = [
     storageUsed: "3.8 GB",
     storageBytes: 3_800_000_000,
     createdAt: "2025-11-07T08:15:00Z",
-    endpoint: "https://s3.nairobi.gatehouse.cloud/app-backups",
+    endpoint: "https://s3.nairobi.polariscloud.ai/app-backups",
   },
   {
     id: "bkt-0j1k2l",
@@ -68,7 +68,7 @@ const MOCK_BUCKETS: Bucket[] = [
     storageUsed: "0.9 GB",
     storageBytes: 900_000_000,
     createdAt: "2026-01-31T16:45:00Z",
-    endpoint: "https://s3.capetown.gatehouse.cloud/team-assets",
+    endpoint: "https://s3.capetown.polariscloud.ai/team-assets",
   },
   {
     id: "bkt-3m4n5o",
@@ -80,7 +80,7 @@ const MOCK_BUCKETS: Bucket[] = [
     storageUsed: "0.3 GB",
     storageBytes: 300_000_000,
     createdAt: "2026-01-24T11:20:00Z",
-    endpoint: "https://s3.lagos.gatehouse.cloud/logs-archive",
+    endpoint: "https://s3.lagos.polariscloud.ai/logs-archive",
   },
 ];
 
@@ -165,7 +165,7 @@ export async function POST(request: Request) {
     storageUsed: "0 B",
     storageBytes: 0,
     createdAt: new Date().toISOString(),
-    endpoint: `https://s3.${regionSlug}.gatehouse.cloud/${name}`,
+    endpoint: `https://s3.${regionSlug}.polariscloud.ai/${name}`,
   };
 
   return NextResponse.json({ bucket: newBucket }, { status: 201 });

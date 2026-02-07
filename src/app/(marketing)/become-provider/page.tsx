@@ -70,7 +70,7 @@ const requirements = [
     icon: Server,
     title: "SSH access",
     description:
-      "Open SSH port (22 or custom) reachable from Gatehouse verifiers.",
+      "Open SSH port (22 or custom) reachable from Polaris Cloud verifiers.",
   },
   {
     icon: HardDrive,
@@ -99,7 +99,7 @@ const faqs: { question: string; answer: string }[] = [
   {
     question: "Is my data safe? Who accesses my machine?",
     answer:
-      "Clients run their workloads inside isolated Docker containers with strict resource limits. They cannot access your host system, other containers, or any of your personal data. Gatehouse enforces network isolation and monitors all container activity. You can also set up dedicated rental partitions.",
+      "Clients run their workloads inside isolated Docker containers with strict resource limits. They cannot access your host system, other containers, or any of your personal data. Polaris Cloud enforces network isolation and monitors all container activity. You can also set up dedicated rental partitions.",
   },
   {
     question: "Can I use my machine while it's listed?",
@@ -120,7 +120,7 @@ export default function BecomeProviderPage() {
           <div className="flex flex-col items-center text-center">
             <div className="mb-6 flex items-center gap-2 rounded-full border border-copper/30 bg-copper/10 px-4 py-2 text-sm text-copper shadow-sm">
               <Pickaxe className="h-4 w-4" />
-              Gatehouse Provider Program
+              Polaris Cloud Provider Program
             </div>
 
             <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-foreground md:text-6xl">
@@ -301,7 +301,7 @@ export default function BecomeProviderPage() {
               Frequently Asked Questions
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Everything you need to know about providing compute on Gatehouse.
+              Everything you need to know about providing compute on Polaris Cloud.
             </p>
           </div>
 
@@ -347,7 +347,7 @@ export default function BecomeProviderPage() {
             Ready to start earning?
           </h2>
           <p className="mt-3 text-muted-foreground">
-            Join the Gatehouse provider network and turn your idle hardware into
+            Join the Polaris Cloud provider network and turn your idle hardware into
             a revenue stream.
           </p>
           <div className="mt-8">

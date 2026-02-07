@@ -5,7 +5,7 @@ import * as schema from "./schema";
 let _db: BetterSQLite3Database<typeof schema> | null = null;
 
 function getDbPath() {
-  return (process.env.DATABASE_URL || "file:./gatehouse.db").replace("file:", "");
+  return (process.env.DATABASE_URL || "file:./polaris.db").replace("file:", "");
 }
 
 function initDb(): BetterSQLite3Database<typeof schema> {

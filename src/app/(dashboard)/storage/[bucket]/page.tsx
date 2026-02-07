@@ -264,7 +264,7 @@ const BUCKET_META: Record<string, BucketMeta> = {
     accessLevel: "public-read",
     createdAt: "2025-12-07T10:30:00Z",
     storageUsed: "15.2 GB",
-    endpoint: "https://s3.lagos.gatehouse.cloud/ml-datasets",
+    endpoint: "https://s3.lagos.polariscloud.ai/ml-datasets",
   },
   "model-weights": {
     name: "model-weights",
@@ -272,7 +272,7 @@ const BUCKET_META: Record<string, BucketMeta> = {
     accessLevel: "private",
     createdAt: "2026-01-07T14:00:00Z",
     storageUsed: "28.1 GB",
-    endpoint: "https://s3.lagos.gatehouse.cloud/model-weights",
+    endpoint: "https://s3.lagos.polariscloud.ai/model-weights",
   },
   "app-backups": {
     name: "app-backups",
@@ -280,7 +280,7 @@ const BUCKET_META: Record<string, BucketMeta> = {
     accessLevel: "private",
     createdAt: "2025-11-07T08:15:00Z",
     storageUsed: "3.8 GB",
-    endpoint: "https://s3.nairobi.gatehouse.cloud/app-backups",
+    endpoint: "https://s3.nairobi.polariscloud.ai/app-backups",
   },
   "team-assets": {
     name: "team-assets",
@@ -288,7 +288,7 @@ const BUCKET_META: Record<string, BucketMeta> = {
     accessLevel: "public-read",
     createdAt: "2026-01-31T16:45:00Z",
     storageUsed: "0.9 GB",
-    endpoint: "https://s3.capetown.gatehouse.cloud/team-assets",
+    endpoint: "https://s3.capetown.polariscloud.ai/team-assets",
   },
   "logs-archive": {
     name: "logs-archive",
@@ -296,7 +296,7 @@ const BUCKET_META: Record<string, BucketMeta> = {
     accessLevel: "private",
     createdAt: "2026-01-24T11:20:00Z",
     storageUsed: "0.3 GB",
-    endpoint: "https://s3.lagos.gatehouse.cloud/logs-archive",
+    endpoint: "https://s3.lagos.polariscloud.ai/logs-archive",
   },
 };
 

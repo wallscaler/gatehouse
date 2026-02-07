@@ -52,8 +52,8 @@ const MOCK_DATABASES: DatabaseInstance[] = [
     status: "running",
     connections: 156,
     connectionString:
-      "postgresql://admin:s3cur3P@ss@db-prod.lagos.gatehouse.cloud:5432/prod-db",
-    host: "db-prod.lagos.gatehouse.cloud",
+      "postgresql://admin:s3cur3P@ss@db-prod.lagos.polariscloud.ai:5432/prod-db",
+    host: "db-prod.lagos.polariscloud.ai",
     port: 5432,
     username: "admin",
     password: "s3cur3P@ss",
@@ -77,8 +77,8 @@ const MOCK_DATABASES: DatabaseInstance[] = [
     status: "running",
     connections: 89,
     connectionString:
-      "redis://default:r3d1sP@ss@db-cache.lagos.gatehouse.cloud:6379",
-    host: "db-cache.lagos.gatehouse.cloud",
+      "redis://default:r3d1sP@ss@db-cache.lagos.polariscloud.ai:6379",
+    host: "db-cache.lagos.polariscloud.ai",
     port: 6379,
     username: "default",
     password: "r3d1sP@ss",
@@ -102,8 +102,8 @@ const MOCK_DATABASES: DatabaseInstance[] = [
     status: "running",
     connections: 45,
     connectionString:
-      "postgresql://admin:An@lyt1cs@db-analytics.nairobi.gatehouse.cloud:5432/analytics-db",
-    host: "db-analytics.nairobi.gatehouse.cloud",
+      "postgresql://admin:An@lyt1cs@db-analytics.nairobi.polariscloud.ai:5432/analytics-db",
+    host: "db-analytics.nairobi.polariscloud.ai",
     port: 5432,
     username: "admin",
     password: "An@lyt1cs",
@@ -127,8 +127,8 @@ const MOCK_DATABASES: DatabaseInstance[] = [
     status: "stopped",
     connections: 0,
     connectionString:
-      "mongodb://admin:M0ng0Stg@db-staging.capetown.gatehouse.cloud:27017/staging-mongo",
-    host: "db-staging.capetown.gatehouse.cloud",
+      "mongodb://admin:M0ng0Stg@db-staging.capetown.polariscloud.ai:27017/staging-mongo",
+    host: "db-staging.capetown.polariscloud.ai",
     port: 27017,
     username: "admin",
     password: "M0ng0Stg",
@@ -240,7 +240,7 @@ export async function POST(request: Request) {
 
   const portMap = { postgresql: 5432, redis: 6379, mongodb: 27017 } as const;
   const typedEngine = engine as typeof VALID_ENGINES[number];
-  const host = `db-${name}.${regionSlug}.gatehouse.cloud`;
+  const host = `db-${name}.${regionSlug}.polariscloud.ai`;
   const port = portMap[typedEngine];
   const password = `gh_${Math.random().toString(36).slice(2, 14)}`;
 

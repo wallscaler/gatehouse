@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { mockResources, mockHeartbeats } from "@/lib/compute/mock-data";
 import { obfuscateResource } from "@/lib/compute/obfuscation";
+import { fetchOffers, transformOfferToResource } from "@/lib/compute/psca-client";
 import type { ComputeResourceFilters } from "@/lib/compute/types";
+import type { ComputeResource } from "@/lib/db/schema";
 
 export async function GET(request: Request) {
   try {
@@ -18,25 +20,43 @@ export async function GET(request: Request) {
       limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : 20,
     };
 
-    // Filter only active, fully approved resources for public listing
-    let resources = mockResources.filter(
-      (r) =>
-        r.isActive &&
-        !r.isBlacklisted &&
-        r.adminApprovalStatus === "verified"
-    );
+    // Try fetching real offers from PSCA, fall back to mock data
+    let resources: ComputeResource[];
+    const pscaOffers = await fetchOffers({
+      gpu_model: filters.gpuModel ? [filters.gpuModel] : undefined,
+      region: filters.region ? [filters.region] : undefined,
+      max_price: filters.maxPrice,
+      limit: 500,
+    });
 
+    if (pscaOffers && pscaOffers.length > 0) {
+      // Transform real PSCA offers into our resource format
+      resources = pscaOffers.map((offer) => {
+        const transformed = transformOfferToResource(offer);
+        return transformed as unknown as ComputeResource;
+      });
+    } else {
+      // Fall back to mock data when PSCA is unavailable
+      resources = mockResources.filter(
+        (r) =>
+          r.isActive &&
+          !r.isBlacklisted &&
+          r.adminApprovalStatus === "verified"
+      );
+    }
+
+    // Apply filters
     if (filters.type) {
       resources = resources.filter((r) => r.resourceType === filters.type);
     }
 
-    if (filters.gpuModel) {
+    if (filters.gpuModel && !pscaOffers) {
       resources = resources.filter(
         (r) => r.gpuModel?.toLowerCase().includes(filters.gpuModel!.toLowerCase())
       );
     }
 
-    if (filters.region) {
+    if (filters.region && !pscaOffers) {
       resources = resources.filter(
         (r) => r.region?.toLowerCase() === filters.region!.toLowerCase()
       );
@@ -46,7 +66,7 @@ export async function GET(request: Request) {
       resources = resources.filter((r) => (r.ramGb ?? 0) >= filters.minRam!);
     }
 
-    if (filters.maxPrice !== undefined) {
+    if (filters.maxPrice !== undefined && !pscaOffers) {
       resources = resources.filter((r) => (r.hourlyPrice ?? 0) <= filters.maxPrice!);
     }
 
@@ -68,7 +88,6 @@ export async function GET(request: Request) {
         );
         break;
       default:
-        // Default: sort by price ascending
         resources.sort((a, b) => (a.hourlyPrice ?? 0) - (b.hourlyPrice ?? 0));
     }
 
@@ -79,18 +98,22 @@ export async function GET(request: Request) {
     const paginated = resources.slice(start, start + limit);
 
     // Obfuscate resources for public API response
-    // Raw hardware details, provider names, and IPs are masked
     const data = paginated.map((resource) => {
       const heartbeat = mockHeartbeats.find((h) => h.resourceId === resource.id);
       const obfuscated = obfuscateResource(resource);
       return {
         ...obfuscated,
-        isOnline: heartbeat?.isOnline ?? false,
-        health: heartbeat?.health ?? "critical",
+        isOnline: heartbeat?.isOnline ?? true,
+        health: heartbeat?.health ?? "healthy",
       };
     });
 
-    return NextResponse.json({ data, total, page });
+    return NextResponse.json({
+      data,
+      total,
+      page,
+      source: pscaOffers ? "live" : "mock",
+    });
   } catch (error) {
     console.error("Failed to fetch compute resources:", error);
     return NextResponse.json(

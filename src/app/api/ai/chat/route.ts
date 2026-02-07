@@ -25,7 +25,7 @@ interface ChatRequestBody {
 }
 
 // ---------------------------------------------------------------------------
-// POST /api/ai/chat — Gatehouse Inference chat completions
+// POST /api/ai/chat — Polaris Inference chat completions
 // ---------------------------------------------------------------------------
 
 export async function POST(request: Request) {
@@ -147,7 +147,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       id: result.id,
-      object: "gatehouse.completion",
+      object: "polaris.completion",
       created: Math.floor(Date.now() / 1000),
       model: result.model,
       choices: [
@@ -185,7 +185,7 @@ export async function POST(request: Request) {
       );
     }
 
-    console.error("Gatehouse Inference error:", error);
+    console.error("Polaris Inference error:", error);
     return NextResponse.json(
       { error: { message: "Internal inference error", code: "internal_error" } },
       { status: 500 }

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
-  title: "Changelog — Gatehouse",
+  title: "Changelog — Polaris Cloud",
   description:
-    "See what's new in Gatehouse. Latest updates, features, and improvements.",
+    "See what's new in Polaris Cloud. Latest updates, features, and improvements.",
 };
 
 interface ChangelogEntry {
@@ -51,7 +51,7 @@ const entries: ChangelogEntry[] = [
     date: "December 20, 2025",
     title: "Initial Release",
     description:
-      "The first release of Gatehouse — a SaaS starter kit with Clerk authentication and Paystack billing, built for Africa.",
+      "The first release of Polaris Cloud — a SaaS starter kit with Clerk authentication and Paystack billing, built for Africa.",
     changes: [
       "Clerk authentication with dark-themed sign-in/sign-up pages",
       "Paystack billing integration with plan selection",
@@ -75,7 +75,7 @@ export default function ChangelogPage() {
           What&apos;s New
         </h1>
         <p className="mt-3 text-lg text-muted-foreground">
-          All the latest updates, features, and improvements to Gatehouse.
+          All the latest updates, features, and improvements to Polaris Cloud.
         </p>
       </div>
 

@@ -1,6 +1,6 @@
 // ─── Pricing & Plan Logic ────────────────────────────────────
 // Cost calculations, currency formatting, plan access control,
-// and GPU pricing references for the Gatehouse marketplace.
+// and GPU pricing references for the Polaris Cloud marketplace.
 
 // ─── GPU Pricing Reference ───────────────────────────────────
 

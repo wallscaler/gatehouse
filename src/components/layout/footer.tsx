@@ -4,7 +4,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-sm text-muted-foreground">
-            Built with Gatehouse — Clerk + Paystack for African SaaS
+            Polaris Cloud — GPU & CPU Compute for Africa
           </p>
           <div className="flex gap-6 text-sm text-muted-foreground">
             <a href="#" className="hover:text-forest transition-colors">

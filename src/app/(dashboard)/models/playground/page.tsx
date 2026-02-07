@@ -31,7 +31,7 @@ interface EndpointOption {
 }
 
 // ---------------------------------------------------------------------------
-// Endpoint options — Gatehouse Inference backed models + mock image
+// Endpoint options — Polaris Inference backed models + mock image
 // ---------------------------------------------------------------------------
 
 const ENDPOINT_OPTIONS: EndpointOption[] = [
@@ -43,7 +43,7 @@ const ENDPOINT_OPTIONS: EndpointOption[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// JSON formatters — Gatehouse branded
+// JSON formatters — Polaris branded
 // ---------------------------------------------------------------------------
 
 function formatRequestJson(
@@ -79,7 +79,7 @@ function formatResponseJson(
   return JSON.stringify(
     {
       id,
-      object: "gatehouse.completion",
+      object: "polaris.completion",
       created: Math.floor(Date.now() / 1000),
       model,
       choices: [
@@ -329,11 +329,11 @@ export default function PlaygroundPage() {
         ? JSON.stringify(
             {
               id: "gh_img_" + Math.random().toString(36).slice(2, 10),
-              object: "gatehouse.image_generation",
+              object: "polaris.image_generation",
               created: Math.floor(Date.now() / 1000),
               data: [
                 {
-                  url: "https://api.gatehouse.cloud/v1/images/img_abc123.png",
+                  url: "https://api.polariscloud.ai/v1/images/img_abc123.png",
                   revised_prompt: imagePrompt,
                 },
               ],
@@ -361,7 +361,7 @@ export default function PlaygroundPage() {
           Model Playground
         </h1>
         <p className="mt-1 text-muted-foreground">
-          Test Gatehouse AI models interactively with real inference.
+          Test Polaris AI models interactively with real inference.
         </p>
       </div>
 
@@ -718,7 +718,7 @@ export default function PlaygroundPage() {
                   <Play className="mb-3 h-8 w-8 text-muted-foreground/30" />
                   <p className="text-sm text-muted-foreground">
                     {isTextMode
-                      ? "Enter a prompt and click Generate to test Gatehouse AI inference."
+                      ? "Enter a prompt and click Generate to test Polaris AI inference."
                       : "Describe an image and click Generate to test your endpoint."}
                   </p>
                 </div>

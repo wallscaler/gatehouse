@@ -28,7 +28,7 @@ export async function GET(
         ? {
             host: container.host ?? "0.0.0.0",
             port: container.port ?? 22,
-            username: container.sshUsername ?? "gatehouse",
+            username: container.sshUsername ?? "polaris",
             ...(container.sshPassword ? { password: container.sshPassword } : {}),
           }
         : null;

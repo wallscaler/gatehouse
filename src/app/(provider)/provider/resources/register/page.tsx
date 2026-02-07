@@ -182,7 +182,7 @@ export default function RegisterResourcePage() {
           Register New Resource
         </h1>
         <p className="mt-1 text-muted-foreground">
-          Add your compute resource to the Gatehouse network.
+          Add your compute resource to the Polaris Cloud network.
         </p>
       </div>
 
@@ -689,7 +689,7 @@ export default function RegisterResourcePage() {
                   className="mt-0.5 h-4 w-4 rounded border-border bg-mist text-forest accent-forest"
                 />
                 <span className="text-sm text-muted-foreground">
-                  I agree to the Gatehouse Provider Terms of Service and
+                  I agree to the Polaris Cloud Provider Terms of Service and
                   understand that my resource will undergo verification before
                   becoming available on the marketplace.
                 </span>

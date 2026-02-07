@@ -1,6 +1,6 @@
-# Gatehouse
+# Polaris Cloud
 
-**Clerk authentication + Paystack billing, wired together. The SaaS starter kit for Africa.**
+**Decentralized GPU/CPU cloud compute platform for Africa.**
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
@@ -9,7 +9,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2D5A47)](LICENSE)
 
-Gatehouse is a full-stack Next.js starter that wires Clerk authentication to Paystack payments so African SaaS builders can stop plumbing auth-to-billing and start shipping product. Dark mode design with a forest green palette. SQLite for zero-config local development. Deploy to Vercel in minutes.
+Polaris Cloud is a full-stack Next.js platform that wires Clerk authentication to Paystack payments for decentralized GPU/CPU cloud compute in Africa. Dark mode design with a forest green palette. SQLite for zero-config local development. Deploy to Vercel in minutes.
 
 <!-- screenshot here -->
 
@@ -74,8 +74,8 @@ Gatehouse is a full-stack Next.js starter that wires Clerk authentication to Pay
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/your-username/gatehouse.git
-cd gatehouse
+git clone https://github.com/your-username/polaris-cloud.git
+cd polaris-cloud
 npm install
 ```
 
@@ -93,7 +93,7 @@ Open `.env.local` and fill in your keys (see [Environment Variables](#environmen
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Sign up, and Gatehouse will automatically create a local user record and a Paystack customer via webhooks.
+Open [http://localhost:3000](http://localhost:3000). Sign up, and Polaris Cloud will automatically create a local user record and a Paystack customer via webhooks.
 
 ---
 
@@ -111,7 +111,7 @@ Copy `.env.local.example` to `.env.local` and fill in each value:
 | `PAYSTACK_SECRET_KEY` | Yes | Paystack secret key (starts with `sk_`) | [Paystack Dashboard](https://dashboard.paystack.com) -> Settings -> API Keys |
 | `PAYSTACK_PUBLIC_KEY` | Yes | Paystack public key (starts with `pk_`) | Paystack Dashboard -> Settings -> API Keys |
 | `PAYSTACK_WEBHOOK_SECRET` | Yes | Secret for verifying Paystack webhook signatures | Paystack Dashboard -> Settings -> API Keys & Webhooks |
-| `DATABASE_URL` | No | SQLite database path (default: `file:./gatehouse.db`) | Auto-created on first run |
+| `DATABASE_URL` | No | SQLite database path (default: `file:./polaris.db`) | Auto-created on first run |
 | `NEXT_PUBLIC_APP_URL` | No | Your app's public URL (default: `http://localhost:3000`) | Set to your production domain when deploying |
 
 ---
@@ -119,7 +119,7 @@ Copy `.env.local.example` to `.env.local` and fill in each value:
 ## Project Structure
 
 ```
-gatehouse/
+polaris-cloud/
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx                          # Root layout: ClerkProvider, fonts, global CSS
@@ -180,7 +180,7 @@ gatehouse/
 
 ## Paystack Integration
 
-Gatehouse includes a fully typed Paystack API wrapper in `src/lib/paystack/` so you never write raw `fetch` calls against the Paystack API. The wrapper is organized into domain modules:
+Polaris Cloud includes a fully typed Paystack API wrapper in `src/lib/paystack/` so you never write raw `fetch` calls against the Paystack API. The wrapper is organized into domain modules:
 
 | Module | File | Functions |
 |--------|------|-----------|
@@ -211,7 +211,7 @@ User clicks "Subscribe" on billing page
 
 ## Webhook Setup
 
-Gatehouse uses webhooks from both Clerk and Paystack to keep your local database in sync with external state.
+Polaris Cloud uses webhooks from both Clerk and Paystack to keep your local database in sync with external state.
 
 ### Clerk Webhooks
 
@@ -237,7 +237,7 @@ Clerk webhooks are verified using the [Svix](https://svix.com) library with `svi
    ```
 3. Copy your webhook secret into the `PAYSTACK_WEBHOOK_SECRET` env var
 
-Gatehouse handles these Paystack events:
+Polaris Cloud handles these Paystack events:
 
 | Event | What happens |
 |-------|-------------|
@@ -265,7 +265,7 @@ ngrok http 3000
 
 ## Database
 
-Gatehouse uses **SQLite** via **better-sqlite3** with **Drizzle ORM** for type-safe queries. The database is created automatically on first run -- no setup needed.
+Polaris Cloud uses **SQLite** via **better-sqlite3** with **Drizzle ORM** for type-safe queries. The database is created automatically on first run -- no setup needed.
 
 ### Schema
 
@@ -304,7 +304,7 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "sqlite",
   dbCredentials: {
-    url: process.env.DATABASE_URL || "file:./gatehouse.db",
+    url: process.env.DATABASE_URL || "file:./polaris.db",
   },
 });
 ```
@@ -411,7 +411,7 @@ Modify the marketing content in `src/components/landing/`:
    - `PAYSTACK_SECRET_KEY`
    - `PAYSTACK_PUBLIC_KEY`
    - `PAYSTACK_WEBHOOK_SECRET`
-   - `NEXT_PUBLIC_APP_URL` (set to your Vercel domain, e.g. `https://gatehouse.vercel.app`)
+   - `NEXT_PUBLIC_APP_URL` (set to your Vercel domain, e.g. `https://polariscloud.ai`)
 
 4. Deploy
 

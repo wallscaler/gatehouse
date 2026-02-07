@@ -65,8 +65,8 @@ export function Header() {
           <Menu className="h-5 w-5" />
         </button>
         <Link href="/dashboard" className="flex items-center gap-2">
-          <Shield className="h-5 w-5 text-forest" />
-          <span className="font-semibold text-deep-moss">Gatehouse</span>
+          <img src="/logo-mark-white.svg" alt="Polaris" className="h-5 w-5" />
+          <span className="font-semibold text-deep-moss">Polaris</span>
         </Link>
       </div>
 

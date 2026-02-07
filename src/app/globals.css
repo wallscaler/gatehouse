@@ -2,22 +2,25 @@
 
 :root {
   color-scheme: dark;
-  --background: #0a0f0d;
-  --foreground: #E8EFEB;
-  --forest: #3D7A5F;
-  --deep-moss: #A8C5B5;
-  --soft-sage: #0f1613;
-  --warm-stone: #131a17;
-  --fern: #5A9C6F;
-  --evergreen: #4A8C63;
-  --mist: #1a2620;
-  --lichen: #6b9d84;
-  --copper: #D4924A;
-  --card: #111916;
-  --card-foreground: #E8EFEB;
-  --border: #1e3329;
-  --muted: #151d19;
-  --muted-foreground: #8aaa99;
+  /* Polaris Cloud — Brand Color System */
+  /* Primary: Polaris Indigo #2222D6, Polaris Blue #4CC9F0 */
+  /* Secondary: Deep Violet #3A0CA3, Gold #FFB800 */
+  --background: #060816;
+  --foreground: #E4E7F1;
+  --forest: #2222D6;
+  --deep-moss: #A8B4E0;
+  --soft-sage: #0a0d1a;
+  --warm-stone: #0e1124;
+  --fern: #4CC9F0;
+  --evergreen: #1A1ABF;
+  --mist: #121633;
+  --lichen: #7B8CC4;
+  --copper: #FFB800;
+  --card: #0c0f20;
+  --card-foreground: #E4E7F1;
+  --border: #1a1e40;
+  --muted: #0e1128;
+  --muted-foreground: #7B8CC4;
 }
 
 @theme inline {
@@ -37,6 +40,10 @@
   --color-border: var(--border);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-polaris-indigo: #2222D6;
+  --color-polaris-blue: #4CC9F0;
+  --color-polaris-violet: #3A0CA3;
+  --color-polaris-gold: #FFB800;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -44,5 +51,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans), "Inter", system-ui, -apple-system, sans-serif;
 }

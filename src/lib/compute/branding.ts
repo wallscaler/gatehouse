@@ -1,29 +1,29 @@
 // ─── SSH Branding Injection Service ──────────────────────────
-// Before exposing containers to users, inject Gatehouse branding
+// Before exposing containers to users, inject Polaris Cloud branding
 // (ASCII art, MOTD, welcome message) so users always see the
-// Gatehouse identity when they connect.
+// Polaris Cloud identity when they connect.
 
 // ─── ASCII Art ───────────────────────────────────────────────
 
-export const GATEHOUSE_ASCII = `
-   ██████╗  █████╗ ████████╗███████╗██╗  ██╗ ██████╗ ██╗   ██╗███████╗███████╗
-  ██╔════╝ ██╔══██╗╚══██╔══╝██╔════╝██║  ██║██╔═══██╗██║   ██║██╔════╝██╔════╝
-  ██║  ███╗███████║   ██║   █████╗  ███████║██║   ██║██║   ██║███████╗█████╗
-  ██║   ██║██╔══██║   ██║   ██╔══╝  ██╔══██║██║   ██║██║   ██║╚════██║██╔══╝
-  ╚██████╔╝██║  ██║   ██║   ███████╗██║  ██║╚██████╔╝╚██████╔╝███████║███████╗
-   ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝
+export const POLARIS_ASCII = `
+  ██████╗  ██████╗ ██╗      █████╗ ██████╗ ██╗███████╗
+  ██╔══██╗██╔═══██╗██║     ██╔══██╗██╔══██╗██║██╔════╝
+  ██████╔╝██║   ██║██║     ███████║██████╔╝██║███████╗
+  ██╔═══╝ ██║   ██║██║     ██╔══██║██╔══██╗██║╚════██║
+  ██║     ╚██████╔╝███████╗██║  ██║██║  ██║██║███████║
+  ╚═╝      ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝
                             C L O U D
 `;
 
-export const GATEHOUSE_MOTD = `
+export const POLARIS_MOTD = `
 ╔══════════════════════════════════════════════════════════════╗
-║                    Welcome to Gatehouse Cloud                ║
+║                    Welcome to Polaris Cloud                 ║
 ║                                                              ║
 ║   GPU/CPU Cloud Computing for Africa & Beyond               ║
 ║                                                              ║
-║   Docs:    https://docs.gatehouse.cloud                     ║
-║   Support: support@gatehouse.cloud                           ║
-║   Status:  https://status.gatehouse.cloud                    ║
+║   Docs:    https://docs.polariscloud.ai                     ║
+║   Support: support@polariscloud.ai                           ║
+║   Status:  https://status.polariscloud.ai                    ║
 ║                                                              ║
 ║   Instance: {{INSTANCE_ID}}                                  ║
 ║   Region:   {{REGION}}                                       ║
@@ -46,7 +46,7 @@ interface BrandingContext {
  * Generate the MOTD content with context-specific values interpolated.
  */
 export function generateMotd(ctx: BrandingContext): string {
-  return GATEHOUSE_MOTD
+  return POLARIS_MOTD
     .replace("{{INSTANCE_ID}}", ctx.instanceId)
     .replace("{{REGION}}", ctx.region)
     .replace("{{PLAN}}", ctx.plan)
@@ -54,38 +54,38 @@ export function generateMotd(ctx: BrandingContext): string {
 }
 
 /**
- * Generate the shell commands to inject Gatehouse branding into a container.
+ * Generate the shell commands to inject Polaris Cloud branding into a container.
  *
  * This is executed via SSH before the container is handed to the user.
  * It sets up:
- * - /etc/motd with Gatehouse ASCII art and instance info
- * - ~/.bashrc with Gatehouse welcome on login
- * - /etc/gatehouse/info.json with machine-readable instance metadata
+ * - /etc/motd with Polaris Cloud ASCII art and instance info
+ * - ~/.bashrc with Polaris Cloud welcome on login
+ * - /etc/polaris/info.json with machine-readable instance metadata
  */
 export function generateBrandingScript(ctx: BrandingContext): string {
   const motd = generateMotd(ctx);
-  const asciiEscaped = GATEHOUSE_ASCII.replace(/\\/g, "\\\\").replace(/'/g, "'\\''");
+  const asciiEscaped = POLARIS_ASCII.replace(/\\/g, "\\\\").replace(/'/g, "'\\''");
   const motdEscaped = motd.replace(/\\/g, "\\\\").replace(/'/g, "'\\''");
 
   return `#!/bin/bash
 set -e
 
-# ─── Gatehouse Cloud Branding Setup ──────────────────────────
+# ─── Polaris Cloud Branding Setup ──────────────────────────
 # This script is run automatically before container handoff.
 
-# Create Gatehouse info directory
-mkdir -p /etc/gatehouse
+# Create Polaris info directory
+mkdir -p /etc/polaris
 
 # Write machine-readable instance info
-cat > /etc/gatehouse/info.json << 'GHEOF'
+cat > /etc/polaris/info.json << 'GHEOF'
 {
-  "provider": "Gatehouse Cloud",
+  "provider": "Polaris Cloud",
   "instance_id": "${ctx.instanceId}",
   "region": "${ctx.region}",
   "plan": "${ctx.plan}",
   "expires_at": "${ctx.expiresAt}",
-  "support": "support@gatehouse.cloud",
-  "docs": "https://docs.gatehouse.cloud"
+  "support": "support@polariscloud.ai",
+  "docs": "https://docs.polariscloud.ai"
 }
 GHEOF
 
@@ -95,27 +95,27 @@ ${asciiEscaped}
 ${motdEscaped}
 MOTDEOF
 
-# Add Gatehouse welcome to bashrc for the user
+# Add Polaris Cloud welcome to bashrc for the user
 BASHRC_PATH="/home/${ctx.username}/.bashrc"
 if [ ! -f "$BASHRC_PATH" ]; then
   BASHRC_PATH="/root/.bashrc"
 fi
 
 # Only add if not already present
-if ! grep -q "GATEHOUSE_BRANDED" "$BASHRC_PATH" 2>/dev/null; then
+if ! grep -q "POLARIS_BRANDED" "$BASHRC_PATH" 2>/dev/null; then
   cat >> "$BASHRC_PATH" << 'RCEOF'
 
-# GATEHOUSE_BRANDED
-export PS1='\\[\\033[0;32m\\]gatehouse\\[\\033[0m\\]:\\[\\033[0;34m\\]\\w\\[\\033[0m\\]\\$ '
-alias gatehouse-info='cat /etc/gatehouse/info.json | python3 -m json.tool 2>/dev/null || cat /etc/gatehouse/info.json'
-alias gatehouse-help='echo "Gatehouse Cloud Commands:" && echo "  gatehouse-info   - Show instance details" && echo "  gatehouse-help   - Show this help" && echo "" && echo "Support: support@gatehouse.cloud" && echo "Docs:    https://docs.gatehouse.cloud"'
+# POLARIS_BRANDED
+export PS1='\\[\\033[0;32m\\]polaris\\[\\033[0m\\]:\\[\\033[0;34m\\]\\w\\[\\033[0m\\]\\$ '
+alias polaris-info='cat /etc/polaris/info.json | python3 -m json.tool 2>/dev/null || cat /etc/polaris/info.json'
+alias polaris-help='echo "Polaris Cloud Commands:" && echo "  polaris-info   - Show instance details" && echo "  polaris-help   - Show this help" && echo "" && echo "Support: support@polariscloud.ai" && echo "Docs:    https://docs.polariscloud.ai"'
 RCEOF
 fi
 
-# Set hostname to gatehouse-branded name
-hostname "gh-${ctx.instanceId}" 2>/dev/null || true
+# Set hostname to polaris-branded name
+hostname "pl-${ctx.instanceId}" 2>/dev/null || true
 
-echo "Gatehouse branding applied successfully."
+echo "Polaris Cloud branding applied successfully."
 `;
 }
 
@@ -126,10 +126,10 @@ echo "Gatehouse branding applied successfully."
 export function generateBrandingOneliner(ctx: BrandingContext): string {
   const motd = generateMotd(ctx);
   const lines = [
-    `mkdir -p /etc/gatehouse`,
-    `echo '{"provider":"Gatehouse Cloud","instance_id":"${ctx.instanceId}","region":"${ctx.region}","plan":"${ctx.plan}"}' > /etc/gatehouse/info.json`,
-    `printf '%s\\n' '${GATEHOUSE_ASCII.replace(/'/g, "'\\''")}' > /etc/motd`,
-    `echo 'export PS1="\\033[0;32mgatehouse\\033[0m:\\033[0;34m\\w\\033[0m\\$ "' >> /home/${ctx.username}/.bashrc 2>/dev/null || echo 'export PS1="\\033[0;32mgatehouse\\033[0m:\\033[0;34m\\w\\033[0m\\$ "' >> /root/.bashrc`,
+    `mkdir -p /etc/polaris`,
+    `echo '{"provider":"Polaris Cloud","instance_id":"${ctx.instanceId}","region":"${ctx.region}","plan":"${ctx.plan}"}' > /etc/polaris/info.json`,
+    `printf '%s\\n' '${POLARIS_ASCII.replace(/'/g, "'\\''")}' > /etc/motd`,
+    `echo 'export PS1="\\033[0;32mpolaris\\033[0m:\\033[0;34m\\w\\033[0m\\$ "' >> /home/${ctx.username}/.bashrc 2>/dev/null || echo 'export PS1="\\033[0;32mpolaris\\033[0m:\\033[0;34m\\w\\033[0m\\$ "' >> /root/.bashrc`,
   ];
   return lines.join(" && ");
 }
@@ -139,9 +139,9 @@ export function generateBrandingOneliner(ctx: BrandingContext): string {
  */
 export function generateCleanupScript(): string {
   return `#!/bin/bash
-rm -rf /etc/gatehouse
-sed -i '/GATEHOUSE_BRANDED/,+5d' /root/.bashrc 2>/dev/null || true
-sed -i '/GATEHOUSE_BRANDED/,+5d' /home/*/.bashrc 2>/dev/null || true
+rm -rf /etc/polaris
+sed -i '/POLARIS_BRANDED/,+5d' /root/.bashrc 2>/dev/null || true
+sed -i '/POLARIS_BRANDED/,+5d' /home/*/.bashrc 2>/dev/null || true
 echo "" > /etc/motd 2>/dev/null || true
 `;
 }

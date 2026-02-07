@@ -126,7 +126,7 @@ export async function POST(request: Request) {
       paymentStatus: "pending" as const,
       host: resource.publicIp,
       port: resource.rentalPort,
-      sshUsername: resource.sshUsername ?? "gatehouse",
+      sshUsername: resource.sshUsername ?? "polaris",
       sshPassword: body.authMethod !== "key" ? `tmp_pw_${crypto.randomUUID().slice(0, 6)}` : null,
       sshKeyFingerprint: body.sshKeyId ? "SHA256:mock_fingerprint" : null,
       authMethod: body.authMethod,
@@ -147,7 +147,7 @@ export async function POST(request: Request) {
     const connectionDetails = {
       host: resource.publicIp ?? "0.0.0.0",
       port: resource.rentalPort ?? 22,
-      username: resource.sshUsername ?? "gatehouse",
+      username: resource.sshUsername ?? "polaris",
       ...(mockContainer.sshPassword ? { password: mockContainer.sshPassword } : {}),
     };
 

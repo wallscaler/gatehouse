@@ -819,7 +819,7 @@ export default function ModelDetailPage() {
 // ---------------------------------------------------------------------------
 
 function curlExample(modelId: string): string {
-  return `curl -X POST https://api.gatehouse.cloud/v1/models/${modelId}/generate \\
+  return `curl -X POST https://api.polariscloud.ai/v1/models/${modelId}/generate \\
   -H "Authorization: Bearer gh_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -833,7 +833,7 @@ function pythonExample(modelId: string): string {
   return `import requests
 
 response = requests.post(
-    "https://api.gatehouse.cloud/v1/models/${modelId}/generate",
+    "https://api.polariscloud.ai/v1/models/${modelId}/generate",
     headers={
         "Authorization": "Bearer gh_live_...",
         "Content-Type": "application/json",

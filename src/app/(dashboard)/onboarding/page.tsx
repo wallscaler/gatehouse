@@ -86,7 +86,7 @@ export default function OnboardingPage() {
       id: "api-keys",
       title: "Generate API keys",
       description:
-        "Create API keys to integrate Gatehouse with your application.",
+        "Create API keys to integrate Polaris Cloud with your application.",
       icon: Code,
       completed: false,
       action: {
@@ -114,7 +114,7 @@ export default function OnboardingPage() {
         <div className="flex items-center gap-3">
           <Shield className="h-8 w-8 text-forest" />
           <h1 className="text-2xl font-bold text-deep-moss">
-            Welcome to Gatehouse!
+            Welcome to Polaris Cloud!
           </h1>
         </div>
         <p className="text-muted-foreground">
@@ -225,7 +225,7 @@ export default function OnboardingPage() {
             You&apos;re all set!
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Your Gatehouse setup is complete. Head to your dashboard to get
+            Your Polaris Cloud setup is complete. Head to your dashboard to get
             started.
           </p>
           <Link href="/dashboard" className="mt-4 inline-block">

@@ -18,7 +18,7 @@ export default function MarketingLayout({
             <Link href="/" className="flex items-center gap-2">
               <Shield className="h-6 w-6 text-forest" />
               <span className="text-lg font-semibold text-deep-moss">
-                Gatehouse
+                Polaris Cloud
               </span>
             </Link>
             <div className="hidden items-center gap-6 sm:flex">

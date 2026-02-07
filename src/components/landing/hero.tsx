@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Shield, Cpu } from "lucide-react";
+import { Cpu } from "lucide-react";
 
 export function Hero() {
   return (
@@ -14,12 +14,12 @@ export function Hero() {
 
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-deep-moss md:text-6xl">
             Africa&apos;s{" "}
-            <span className="text-forest">GPU Cloud</span>
+            <span className="text-fern">GPU Cloud</span>
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
             Access global GPU compute with local payments. Deploy AI workloads
-            in seconds with Clerk auth and Paystack billing.
+            in seconds — powered by Polaris Cloud.
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -45,14 +45,14 @@ export function Hero() {
             </div>
             <div className="p-4 font-mono text-sm text-muted-foreground">
               <p>
-                <span className="text-fern">$</span> gatehouse deploy --gpu
+                <span className="text-fern">$</span> polaris deploy --gpu
                 rtx4090 --template pytorch
               </p>
               <p className="mt-1 text-foreground">
                 Deploying PyTorch on RTX 4090 in Lagos...
               </p>
               <p className="mt-1 text-fern">
-                Done! SSH: ubuntu@gpu-01.gatehouse.cloud
+                Done! SSH: ubuntu@gpu-01.polariscloud.ai
               </p>
             </div>
           </div>

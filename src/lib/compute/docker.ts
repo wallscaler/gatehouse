@@ -1,7 +1,7 @@
 // ─── Docker Deployment Service ───────────────────────────────
 // Generates Docker run commands, docker-compose configs, and
 // container naming conventions for compute resource deployments.
-// Includes Gatehouse branding injection as part of the deploy pipeline.
+// Includes Polaris Cloud branding injection as part of the deploy pipeline.
 
 import { TEMPLATE_CATEGORIES } from "./constants";
 import { generateBrandingOneliner } from "./branding";
@@ -218,9 +218,9 @@ export function generateContainerName(
  * Generate a full deployment pipeline that includes:
  * 1. Docker container start
  * 2. Wait for container to be healthy
- * 3. Inject Gatehouse branding via docker exec
+ * 3. Inject Polaris Cloud branding via docker exec
  *
- * This ensures users always see Gatehouse branding when they SSH in.
+ * This ensures users always see Polaris Cloud branding when they SSH in.
  */
 export function generateBrandedDeployScript(
   config: DeploymentConfig,
@@ -243,12 +243,12 @@ export function generateBrandedDeployScript(
   return `#!/bin/bash
 set -e
 
-echo "[Gatehouse] Starting container deployment..."
+echo "[Polaris] Starting container deployment..."
 
 # Step 1: Deploy the container
 ${dockerRun}
 
-echo "[Gatehouse] Container started. Waiting for initialization..."
+echo "[Polaris] Container started. Waiting for initialization..."
 
 # Step 2: Wait for the container to be running
 for i in $(seq 1 30); do
@@ -259,11 +259,11 @@ for i in $(seq 1 30); do
   sleep 2
 done
 
-echo "[Gatehouse] Container is running. Applying branding..."
+echo "[Polaris] Container is running. Applying branding..."
 
-# Step 3: Inject Gatehouse branding
+# Step 3: Inject Polaris Cloud branding
 docker exec ${containerName} bash -c '${brandingCmd.replace(/'/g, "'\\''")}'
 
-echo "[Gatehouse] Deployment complete. Instance ${instanceId} is ready."
+echo "[Polaris] Deployment complete. Instance ${instanceId} is ready."
 `;
 }

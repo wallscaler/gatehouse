@@ -1,8 +1,8 @@
 // ---------------------------------------------------------------------------
-// Gatehouse AI Inference Service
+// Polaris AI Inference Service
 // ---------------------------------------------------------------------------
-// Internal service that handles text generation via the Gatehouse Inference
-// backend. All public-facing identifiers use Gatehouse branding.
+// Internal service that handles text generation via the Polaris Inference
+// backend. All public-facing identifiers use Polaris branding.
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
@@ -46,7 +46,7 @@ interface ChatMessage {
 }
 
 // ---------------------------------------------------------------------------
-// Model mapping — Gatehouse ID to upstream provider model ID
+// Model mapping — Polaris ID to upstream provider model ID
 // ---------------------------------------------------------------------------
 
 const MODEL_MAP: Record<
@@ -83,10 +83,10 @@ const MODEL_MAP: Record<
   },
 };
 
-// Reverse map: upstream model ID -> Gatehouse model ID
+// Reverse map: upstream model ID -> Polaris model ID
 const REVERSE_MODEL_MAP: Record<string, string> = {};
-for (const [ghId, info] of Object.entries(MODEL_MAP)) {
-  REVERSE_MODEL_MAP[info.upstreamId] = ghId;
+for (const [plId, info] of Object.entries(MODEL_MAP)) {
+  REVERSE_MODEL_MAP[info.upstreamId] = plId;
 }
 
 // ---------------------------------------------------------------------------
@@ -99,35 +99,35 @@ function getApiKey(): string {
   const key = process.env.GROQ_API_KEY;
   if (!key) {
     throw new InferenceError(
-      "Gatehouse Inference API key is not configured. Set the GROQ_API_KEY environment variable.",
+      "Polaris Inference API key is not configured. Set the GROQ_API_KEY environment variable.",
       "configuration_error"
     );
   }
   return key;
 }
 
-function resolveUpstreamModel(gatehouseModelId: string): string {
-  const mapping = MODEL_MAP[gatehouseModelId];
+function resolveUpstreamModel(polarisModelId: string): string {
+  const mapping = MODEL_MAP[polarisModelId];
   if (!mapping) {
     throw new InferenceError(
-      `Unknown model "${gatehouseModelId}". Use getAvailableModels() to see supported models.`,
+      `Unknown model "${polarisModelId}". Use getAvailableModels() to see supported models.`,
       "invalid_model"
     );
   }
   return mapping.upstreamId;
 }
 
-function toGatehouseModelId(upstreamModelId: string): string {
+function toPolarisModelId(upstreamModelId: string): string {
   return REVERSE_MODEL_MAP[upstreamModelId] ?? upstreamModelId;
 }
 
-function generateGatehouseId(): string {
+function generatePolarisId(): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
   let id = "";
   for (let i = 0; i < 24; i++) {
     id += chars[Math.floor(Math.random() * chars.length)];
   }
-  return `gh_gen_${id}`;
+  return `pl_gen_${id}`;
 }
 
 function buildMessages(prompt: string, systemPrompt?: string): ChatMessage[] {
@@ -156,9 +156,9 @@ export class InferenceError extends Error {
 function sanitizeErrorMessage(rawMessage: string): string {
   // Strip any upstream provider references from error messages
   return rawMessage
-    .replace(/groq/gi, "Gatehouse Inference")
-    .replace(/api\.groq\.com/gi, "api.gatehouse.cloud")
-    .replace(/openai/gi, "Gatehouse");
+    .replace(/groq/gi, "Polaris Inference")
+    .replace(/api\.groq\.com/gi, "api.polariscloud.ai")
+    .replace(/openai/gi, "Polaris");
 }
 
 // ---------------------------------------------------------------------------
@@ -192,7 +192,7 @@ export async function generateText(params: GenerateTextParams): Promise<Inferenc
   const latencyMs = Math.round(performance.now() - startTime);
 
   if (!response.ok) {
-    let errorMessage = "Gatehouse Inference request failed";
+    let errorMessage = "Polaris Inference request failed";
     try {
       const errorBody = await response.json();
       if (errorBody?.error?.message) {
@@ -206,7 +206,7 @@ export async function generateText(params: GenerateTextParams): Promise<Inferenc
       throw new InferenceError("Rate limit exceeded. Please try again in a moment.", "rate_limit");
     }
     if (response.status === 401) {
-      throw new InferenceError("Gatehouse Inference authentication failed.", "auth_error");
+      throw new InferenceError("Polaris Inference authentication failed.", "auth_error");
     }
 
     throw new InferenceError(errorMessage, "inference_error");
@@ -218,9 +218,9 @@ export async function generateText(params: GenerateTextParams): Promise<Inferenc
   const usage = data.usage;
 
   return {
-    id: generateGatehouseId(),
+    id: generatePolarisId(),
     text: choice?.message?.content ?? "",
-    model: toGatehouseModelId(data.model),
+    model: toPolarisModelId(data.model),
     usage: {
       promptTokens: usage?.prompt_tokens ?? 0,
       completionTokens: usage?.completion_tokens ?? 0,
@@ -240,8 +240,8 @@ export async function generateTextStream(params: GenerateTextParams): Promise<Re
 
   const upstreamModel = resolveUpstreamModel(model);
   const messages = buildMessages(prompt, systemPrompt);
-  const gatehouseId = generateGatehouseId();
-  const gatehouseModel = model;
+  const polarisId = generatePolarisId();
+  const polarisModel = model;
 
   const startTime = performance.now();
 
@@ -262,7 +262,7 @@ export async function generateTextStream(params: GenerateTextParams): Promise<Re
   });
 
   if (!response.ok) {
-    let errorMessage = "Gatehouse Inference request failed";
+    let errorMessage = "Polaris Inference request failed";
     try {
       const errorBody = await response.json();
       if (errorBody?.error?.message) {
@@ -276,7 +276,7 @@ export async function generateTextStream(params: GenerateTextParams): Promise<Re
       throw new InferenceError("Rate limit exceeded. Please try again in a moment.", "rate_limit");
     }
     if (response.status === 401) {
-      throw new InferenceError("Gatehouse Inference authentication failed.", "auth_error");
+      throw new InferenceError("Polaris Inference authentication failed.", "auth_error");
     }
 
     throw new InferenceError(errorMessage, "inference_error");
@@ -284,7 +284,7 @@ export async function generateTextStream(params: GenerateTextParams): Promise<Re
 
   const upstreamBody = response.body;
   if (!upstreamBody) {
-    throw new InferenceError("No response stream received from Gatehouse Inference.", "stream_error");
+    throw new InferenceError("No response stream received from Polaris Inference.", "stream_error");
   }
 
   // Transform the upstream SSE stream to rebrand identifiers
@@ -306,9 +306,9 @@ export async function generateTextStream(params: GenerateTextParams): Promise<Re
             // Send a final metadata event with latency and usage
             const latencyMs = Math.round(performance.now() - startTime);
             const metaEvent = `data: ${JSON.stringify({
-              id: gatehouseId,
-              object: "gatehouse.completion.chunk",
-              model: gatehouseModel,
+              id: polarisId,
+              object: "polaris.completion.chunk",
+              model: polarisModel,
               choices: [{ delta: {}, finish_reason: "stop", index: 0 }],
               usage: {
                 prompt_tokens: totalPromptTokens,
@@ -353,10 +353,10 @@ export async function generateTextStream(params: GenerateTextParams): Promise<Re
 
               // Rebrand the chunk
               const rebranded = {
-                id: gatehouseId,
-                object: "gatehouse.completion.chunk",
+                id: polarisId,
+                object: "polaris.completion.chunk",
                 created: chunk.created,
-                model: gatehouseModel,
+                model: polarisModel,
                 choices: chunk.choices?.map(
                   (c: { delta?: { content?: string; role?: string }; finish_reason?: string; index?: number }) => ({
                     delta: c.delta,

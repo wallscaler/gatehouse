@@ -14,25 +14,25 @@ interface AIModel {
   license: string;
   description: string;
   popular: boolean;
-  gatehouseOptimized: boolean;
+  polarisOptimized: boolean;
 }
 
 // ---------------------------------------------------------------------------
-// Gatehouse Optimized models (backed by real inference)
+// Polaris Optimized models (backed by real inference)
 // ---------------------------------------------------------------------------
 
-function getGatehouseOptimizedModels(): AIModel[] {
+function getPolarisOptimizedModels(): AIModel[] {
   const inferenceModels = getAvailableModels();
   return inferenceModels.map((m) => ({
     id: m.id,
     name: m.name,
-    creator: "Gatehouse AI",
+    creator: "Polaris AI",
     category: "Text Generation",
     params: getParamCount(m.id),
-    license: "Gatehouse Inference",
+    license: "Polaris Inference",
     description: m.description,
     popular: m.id === "llama-3.3-70b" || m.id === "llama-3.1-8b",
-    gatehouseOptimized: true,
+    polarisOptimized: true,
   }));
 }
 
@@ -61,7 +61,7 @@ const COMMUNITY_MODELS: AIModel[] = [
     description:
       "High-performance 7B model with sliding window attention, excelling at coding and reasoning tasks.",
     popular: true,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "deepseek-coder-v2",
@@ -73,7 +73,7 @@ const COMMUNITY_MODELS: AIModel[] = [
     description:
       "Specialized code generation model supporting 338+ programming languages with fill-in-the-middle capability.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "qwen-2.5-7b",
@@ -85,7 +85,7 @@ const COMMUNITY_MODELS: AIModel[] = [
     description:
       "Strong general-purpose model with excellent performance on benchmarks and multilingual understanding.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "stable-diffusion-xl",
@@ -97,7 +97,7 @@ const COMMUNITY_MODELS: AIModel[] = [
     description:
       "Industry-leading image generation model producing photorealistic and artistic images from text prompts.",
     popular: true,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "flux-1-schnell",
@@ -109,7 +109,7 @@ const COMMUNITY_MODELS: AIModel[] = [
     description:
       "Ultra-fast image generation model delivering high-quality outputs with significantly reduced inference time.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "whisper-large-v3",
@@ -121,7 +121,7 @@ const COMMUNITY_MODELS: AIModel[] = [
     description:
       "State-of-the-art speech recognition model supporting 100+ languages with robust transcription accuracy.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "bge-m3",
@@ -133,7 +133,7 @@ const COMMUNITY_MODELS: AIModel[] = [
     description:
       "Multilingual embedding model supporting 100+ languages, ideal for semantic search and RAG pipelines.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "llava-1.6",
@@ -145,7 +145,7 @@ const COMMUNITY_MODELS: AIModel[] = [
     description:
       "Multimodal vision-language model capable of understanding images and answering questions about visual content.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
   {
     id: "codellama-34b",
@@ -157,7 +157,7 @@ const COMMUNITY_MODELS: AIModel[] = [
     description:
       "Large-scale code-specialized model excelling at code completion, generation, and understanding across languages.",
     popular: false,
-    gatehouseOptimized: false,
+    polarisOptimized: false,
   },
 ];
 
@@ -171,8 +171,8 @@ export async function GET(request: Request) {
     const category = searchParams.get("category");
     const search = searchParams.get("search");
 
-    // Gatehouse Optimized models come first
-    const allModels = [...getGatehouseOptimizedModels(), ...COMMUNITY_MODELS];
+    // Polaris Optimized models come first
+    const allModels = [...getPolarisOptimizedModels(), ...COMMUNITY_MODELS];
 
     let results = [...allModels];
 

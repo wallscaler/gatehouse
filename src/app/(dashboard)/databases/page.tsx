@@ -81,7 +81,7 @@ const MOCK_DATABASES: DatabaseInstance[] = [
     region: "Lagos",
     status: "running",
     connections: 156,
-    connectionString: "postgresql://admin:****@db-prod.lagos.gatehouse.cloud:5432/prod-db",
+    connectionString: "postgresql://admin:****@db-prod.lagos.polariscloud.ai:5432/prod-db",
     createdAt: "2025-12-07T10:30:00Z",
   },
   {
@@ -97,7 +97,7 @@ const MOCK_DATABASES: DatabaseInstance[] = [
     region: "Lagos",
     status: "running",
     connections: 89,
-    connectionString: "redis://default:****@db-cache.lagos.gatehouse.cloud:6379",
+    connectionString: "redis://default:****@db-cache.lagos.polariscloud.ai:6379",
     createdAt: "2026-01-07T14:00:00Z",
   },
   {
@@ -113,7 +113,7 @@ const MOCK_DATABASES: DatabaseInstance[] = [
     region: "Nairobi",
     status: "running",
     connections: 45,
-    connectionString: "postgresql://admin:****@db-analytics.nairobi.gatehouse.cloud:5432/analytics-db",
+    connectionString: "postgresql://admin:****@db-analytics.nairobi.polariscloud.ai:5432/analytics-db",
     createdAt: "2026-01-17T09:15:00Z",
   },
   {
@@ -129,7 +129,7 @@ const MOCK_DATABASES: DatabaseInstance[] = [
     region: "Cape Town",
     status: "stopped",
     connections: 0,
-    connectionString: "mongodb://admin:****@db-staging.capetown.gatehouse.cloud:27017/staging-mongo",
+    connectionString: "mongodb://admin:****@db-staging.capetown.polariscloud.ai:27017/staging-mongo",
     createdAt: "2026-01-31T16:45:00Z",
   },
 ];

@@ -40,7 +40,7 @@ export default function ProviderLayout({
           <div className="flex h-16 items-center gap-2 border-b border-border px-6">
             <Pickaxe className="h-6 w-6 text-copper" />
             <span className="text-lg font-semibold text-deep-moss">
-              Gatehouse
+              Polaris Cloud
             </span>
             <span className="ml-auto rounded-md bg-copper/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-copper">
               Provider
@@ -78,7 +78,7 @@ export default function ProviderLayout({
               </button>
               <div className="flex items-center gap-2">
                 <Pickaxe className="h-5 w-5 text-copper" />
-                <span className="font-semibold text-deep-moss">Gatehouse</span>
+                <span className="font-semibold text-deep-moss">Polaris Cloud</span>
                 <span className="rounded-md bg-copper/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-copper">
                   Provider
                 </span>
@@ -87,7 +87,7 @@ export default function ProviderLayout({
 
             <div className="hidden items-center gap-2 md:flex">
               <span className="text-sm text-muted-foreground">
-                Gatehouse Provider
+                Polaris Cloud Provider
               </span>
             </div>
 
