@@ -18,6 +18,9 @@ import {
   AppWindow,
   Pickaxe,
   ShieldAlert,
+  HardDrive,
+  Database,
+  Brain,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -30,6 +33,12 @@ const platformLinks = [
   { href: "/apps", label: "Apps", icon: AppWindow },
   { href: "/instances", label: "My Instances", icon: Box },
   { href: "/ssh-keys", label: "SSH Keys", icon: KeyRound },
+];
+
+const serviceLinks = [
+  { href: "/storage", label: "Storage", icon: HardDrive },
+  { href: "/databases", label: "Databases", icon: Database },
+  { href: "/models", label: "AI Models", icon: Brain },
 ];
 
 const accountLinks = [
@@ -90,6 +99,27 @@ export function Header() {
               Platform
             </span>
             {platformLinks.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  pathname === href
+                    ? "bg-forest text-white"
+                    : "text-muted-foreground hover:bg-mist hover:text-foreground"
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </Link>
+            ))}
+
+            {/* Services section */}
+            <span className="mb-1 mt-3 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Services
+            </span>
+            {serviceLinks.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}
