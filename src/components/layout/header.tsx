@@ -1,18 +1,42 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
-import { Shield, Menu, Bell } from "lucide-react";
+import {
+  Shield,
+  Menu,
+  Bell,
+  LayoutDashboard,
+  CreditCard,
+  Users,
+  Settings,
+  BarChart3,
+  Server,
+  Box,
+  KeyRound,
+  Key,
+  Webhook,
+  Pickaxe,
+  ShieldAlert,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CreditCard, Users, Settings, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const links = [
+const platformLinks = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+  { href: "/compute", label: "Compute", icon: Server },
+  { href: "/instances", label: "My Instances", icon: Box },
+  { href: "/ssh-keys", label: "SSH Keys", icon: KeyRound },
+];
+
+const accountLinks = [
+  { href: "/api-keys", label: "API Keys", icon: Key },
   { href: "/usage", label: "Usage", icon: BarChart3 },
   { href: "/billing", label: "Billing", icon: CreditCard },
   { href: "/team", label: "Team", icon: Users },
+  { href: "/webhooks", label: "Webhooks", icon: Webhook },
+  { href: "/notifications", label: "Notifications", icon: Bell },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -59,7 +83,11 @@ export function Header() {
       {mobileOpen && (
         <div className="absolute left-0 top-16 z-50 w-full border-b border-border bg-card p-4 shadow-lg md:hidden">
           <nav className="flex flex-col gap-1">
-            {links.map(({ href, label, icon: Icon }) => (
+            {/* Platform section */}
+            <span className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Platform
+            </span>
+            {platformLinks.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}
@@ -75,6 +103,47 @@ export function Header() {
                 {label}
               </Link>
             ))}
+
+            {/* Account section */}
+            <span className="mb-1 mt-3 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Account
+            </span>
+            {accountLinks.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  pathname === href
+                    ? "bg-forest text-white"
+                    : "text-muted-foreground hover:bg-mist hover:text-foreground"
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </Link>
+            ))}
+
+            {/* Bottom links */}
+            <div className="mt-3 border-t border-border pt-3">
+              <Link
+                href="/provider/dashboard"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-copper transition-colors hover:bg-mist"
+              >
+                <Pickaxe className="h-4 w-4" />
+                Provider Portal
+              </Link>
+              <Link
+                href="/admin"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-mist hover:text-foreground"
+              >
+                <ShieldAlert className="h-4 w-4" />
+                Admin
+              </Link>
+            </div>
           </nav>
         </div>
       )}

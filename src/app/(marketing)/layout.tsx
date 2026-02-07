@@ -23,6 +23,12 @@ export default function MarketingLayout({
             </Link>
             <div className="hidden items-center gap-6 sm:flex">
               <Link
+                href="/#pricing"
+                className="text-sm text-muted-foreground transition-colors hover:text-forest"
+              >
+                Pricing
+              </Link>
+              <Link
                 href="/docs"
                 className="text-sm text-muted-foreground transition-colors hover:text-forest"
               >
@@ -33,6 +39,12 @@ export default function MarketingLayout({
                 className="text-sm text-muted-foreground transition-colors hover:text-forest"
               >
                 Changelog
+              </Link>
+              <Link
+                href="/become-provider"
+                className="text-sm text-muted-foreground transition-colors hover:text-forest"
+              >
+                Become a Provider
               </Link>
             </div>
           </div>

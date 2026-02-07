@@ -9,47 +9,63 @@ import Link from "next/link";
 
 const plans = [
   {
-    name: "Free",
-    description: "Get started with the basics",
+    name: "Student",
+    description: "Learn and experiment for free",
     price: "0",
     interval: "",
     features: [
-      "Up to 100 users",
-      "Basic analytics",
+      "2 GPU hours/month",
+      "Community templates",
+      "1 concurrent instance",
       "Community support",
-      "1 project",
     ],
     cta: "Get Started",
     popular: false,
   },
   {
-    name: "Pro",
-    description: "For growing businesses",
-    price: "15,000",
+    name: "Researcher",
+    description: "For individuals and small teams",
+    price: "15",
     interval: "/month",
     features: [
-      "Unlimited users",
-      "Advanced analytics",
+      "50 GPU hours/month",
+      "All templates",
+      "3 concurrent instances",
+      "SSH key management",
       "Priority support",
-      "Unlimited projects",
-      "Custom domain",
       "API access",
+    ],
+    cta: "Start Free Trial",
+    popular: false,
+  },
+  {
+    name: "Researcher Pro",
+    description: "For serious ML workloads",
+    price: "49",
+    interval: "/month",
+    features: [
+      "200 GPU hours/month",
+      "All templates + custom images",
+      "10 concurrent instances",
+      "Team collaboration",
+      "Dedicated support",
+      "Webhook integrations",
     ],
     cta: "Start Free Trial",
     popular: true,
   },
   {
     name: "Enterprise",
-    description: "For large-scale operations",
-    price: "50,000",
+    description: "For organizations at scale",
+    price: "199",
     interval: "/month",
     features: [
-      "Everything in Pro",
-      "Dedicated support",
-      "SLA guarantee",
-      "Custom integrations",
-      "Audit logs",
+      "Unlimited GPU hours",
+      "Custom images + private registry",
+      "Unlimited instances",
       "SSO / SAML",
+      "SLA guarantee",
+      "Dedicated account manager",
     ],
     cta: "Contact Sales",
     popular: false,
@@ -65,11 +81,11 @@ export function Pricing() {
             Simple, transparent pricing
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Start free, scale as you grow. All prices in Nigerian Naira.
+            Start free, scale as you grow. Pay only for what you use.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3">
+        <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {plans.map((plan) => (
             <Card
               key={plan.name}
@@ -90,7 +106,7 @@ export function Pricing() {
               <CardContent className="flex-1">
                 <div className="mb-6">
                   <span className="text-4xl font-bold text-deep-moss">
-                    {plan.price === "0" ? "Free" : `\u20A6${plan.price}`}
+                    {plan.price === "0" ? "Free" : `$${plan.price}`}
                   </span>
                   {plan.interval && (
                     <span className="text-muted-foreground">{plan.interval}</span>

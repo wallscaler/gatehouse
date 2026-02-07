@@ -1,42 +1,42 @@
-import { Shield, CreditCard, LayoutDashboard, Zap, Globe, Lock } from "lucide-react";
+import { Store, Rocket, CreditCard, LayoutDashboard, Users, Terminal } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const features = [
   {
-    icon: Shield,
-    title: "Clerk Authentication",
+    icon: Store,
+    title: "GPU Marketplace",
     description:
-      "Sign-up, sign-in, user management, and session handling — all pre-configured and production-ready.",
+      "Browse available GPUs from providers worldwide. Filter by model, VRAM, region, and price to find the right fit for your workload.",
+  },
+  {
+    icon: Rocket,
+    title: "Instant Deploy",
+    description:
+      "Go from zero to running instance in under 30 seconds. Pre-configured templates for PyTorch, TensorFlow, JAX, and more.",
   },
   {
     icon: CreditCard,
     title: "Paystack Billing",
     description:
-      "Accept payments in Naira, Cedis, Rand, and more. Subscriptions, one-time payments, and invoicing built in.",
+      "Pay in Naira, Cedis, Rand, or USD. Automatic invoicing, usage-based billing, and local payment methods built in.",
   },
   {
     icon: LayoutDashboard,
-    title: "Dashboard Ready",
+    title: "Template Library",
     description:
-      "A complete dashboard with sidebar navigation, subscription management, and user settings.",
+      "Start with pre-built environments for popular frameworks. Fine-tuning, inference, training, and notebook templates ready to go.",
   },
   {
-    icon: Zap,
-    title: "Webhook Sync",
+    icon: Users,
+    title: "Team Management",
     description:
-      "Clerk and Paystack webhooks are wired together. User creates an account, billing profile follows automatically.",
+      "Invite collaborators, set spending limits, and share instances. Role-based access keeps your team organized and secure.",
   },
   {
-    icon: Globe,
-    title: "Built for Africa",
+    icon: Terminal,
+    title: "API Access",
     description:
-      "Paystack handles local payment methods — bank transfers, mobile money, USSD — so your users can pay how they prefer.",
-  },
-  {
-    icon: Lock,
-    title: "TypeScript First",
-    description:
-      "Full type safety from API routes to database queries. Catch errors before they reach production.",
+      "Full REST API and CLI tool for programmatic control. Automate deployments, monitor instances, and integrate into your pipeline.",
   },
 ];
 
@@ -46,10 +46,10 @@ export function Features() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-deep-moss md:text-4xl">
-            Everything you need to launch
+            Everything you need to train and deploy
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Auth, payments, and a dashboard — wired together and ready to ship.
+            GPU compute, billing, and collaboration — wired together and ready to ship.
           </p>
         </div>
 
