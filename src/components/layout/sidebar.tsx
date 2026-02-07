@@ -2,12 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CreditCard, Settings, Shield } from "lucide-react";
+import { LayoutDashboard, CreditCard, Settings, Shield, KeyRound, Users, BarChart3, Webhook, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+  { href: "/api-keys", label: "API Keys", icon: KeyRound },
+  { href: "/usage", label: "Usage", icon: BarChart3 },
+  { href: "/webhooks", label: "Webhooks", icon: Webhook },
   { href: "/billing", label: "Billing", icon: CreditCard },
+  { href: "/team", label: "Team", icon: Users },
+  { href: "/notifications", label: "Notifications", icon: Bell },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 

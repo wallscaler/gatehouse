@@ -1,16 +1,18 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
-import { Shield, Menu } from "lucide-react";
+import { Shield, Menu, Bell } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CreditCard, Settings } from "lucide-react";
+import { LayoutDashboard, CreditCard, Users, Settings, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+  { href: "/usage", label: "Usage", icon: BarChart3 },
   { href: "/billing", label: "Billing", icon: CreditCard },
+  { href: "/team", label: "Team", icon: Users },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -35,13 +37,24 @@ export function Header() {
 
       <div className="hidden md:block" />
 
-      <UserButton
-        appearance={{
-          elements: {
-            avatarBox: "h-8 w-8",
-          },
-        }}
-      />
+      <div className="flex items-center gap-3">
+        <Link
+          href="/notifications"
+          className="relative rounded-lg p-2 text-muted-foreground transition-colors hover:bg-mist hover:text-foreground"
+        >
+          <Bell className="h-5 w-5" />
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-forest text-[10px] font-bold text-white">
+            4
+          </span>
+        </Link>
+        <UserButton
+          appearance={{
+            elements: {
+              avatarBox: "h-8 w-8",
+            },
+          }}
+        />
+      </div>
 
       {mobileOpen && (
         <div className="absolute left-0 top-16 z-50 w-full border-b border-border bg-card p-4 shadow-lg md:hidden">
