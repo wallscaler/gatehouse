@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-white/80 backdrop-blur-sm">
+      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
             <Shield className="h-6 w-6 text-forest" />

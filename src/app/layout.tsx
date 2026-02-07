@@ -25,11 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClerkProvider dynamic>
+        <ClerkProvider dynamic appearance={{ baseTheme: undefined, variables: { colorBackground: "#111916", colorText: "#E8EFEB", colorPrimary: "#3D7A5F", colorInputBackground: "#151d19", colorInputText: "#E8EFEB" } }}>
           {children}
         </ClerkProvider>
       </body>
