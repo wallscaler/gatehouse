@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import {
   Code,
   MessageSquare,
   Image,
+  Square,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -30,74 +31,70 @@ interface EndpointOption {
 }
 
 // ---------------------------------------------------------------------------
-// Mock data
+// Endpoint options — Gatehouse Inference backed models + mock image
 // ---------------------------------------------------------------------------
 
 const ENDPOINT_OPTIONS: EndpointOption[] = [
-  {
-    id: "ep_abc123",
-    name: "llama-3.2-3b-prod",
-    modelName: "Llama 3.2 3B",
-    type: "text",
-  },
-  {
-    id: "ep_def456",
-    name: "sdxl-images",
-    modelName: "Stable Diffusion XL",
-    type: "image",
-  },
-  {
-    id: "ep_ghi789",
-    name: "bge-embeddings",
-    modelName: "BGE-M3",
-    type: "text",
-  },
+  { id: "llama-3.3-70b", name: "Llama 3.3 70B", modelName: "Premium Text", type: "text" },
+  { id: "llama-3.1-8b", name: "Llama 3.1 8B", modelName: "Fast Text", type: "text" },
+  { id: "mixtral-8x7b", name: "Mixtral 8x7B", modelName: "Reasoning", type: "text" },
+  { id: "gemma2-9b", name: "Gemma 2 9B", modelName: "Efficient Text", type: "text" },
+  { id: "sdxl-images", name: "SDXL", modelName: "Image Generation", type: "image" },
 ];
 
-const MOCK_TEXT_RESPONSE = `Thank you for asking! I'm doing great. As a large language model deployed on Gatehouse Cloud, I'm ready to assist you with a wide range of tasks including:
+// ---------------------------------------------------------------------------
+// JSON formatters — Gatehouse branded
+// ---------------------------------------------------------------------------
 
-1. **Text generation** — creative writing, summaries, translations
-2. **Code assistance** — debugging, code generation, explanations
-3. **Analysis** — data interpretation, reasoning, problem solving
-4. **Conversation** — natural dialogue on virtually any topic
-
-How can I help you today?`;
-
-const MOCK_REQUEST_JSON = (prompt: string, maxTokens: number, temperature: number, topP: number) =>
-  JSON.stringify(
+function formatRequestJson(
+  model: string,
+  messages: Array<{ role: string; content: string }>,
+  maxTokens: number,
+  temperature: number,
+  topP: number,
+  stream: boolean
+): string {
+  return JSON.stringify(
     {
-      prompt,
+      model,
+      messages,
       max_tokens: maxTokens,
       temperature,
       top_p: topP,
+      stream,
     },
     null,
     2
   );
+}
 
-const MOCK_RESPONSE_JSON = (text: string, tokens: number, latency: number) =>
-  JSON.stringify(
+function formatResponseJson(
+  id: string,
+  model: string,
+  text: string,
+  finishReason: string,
+  usage: { prompt_tokens: number; completion_tokens: number; total_tokens: number },
+  latencyMs: number
+): string {
+  return JSON.stringify(
     {
-      id: "gen_" + Math.random().toString(36).slice(2, 10),
-      object: "text_completion",
+      id,
+      object: "gatehouse.completion",
       created: Math.floor(Date.now() / 1000),
-      model: "llama-3.2-3b",
+      model,
       choices: [
         {
-          text,
-          finish_reason: "stop",
+          message: { role: "assistant", content: text },
+          finish_reason: finishReason,
         },
       ],
-      usage: {
-        prompt_tokens: 12,
-        completion_tokens: tokens,
-        total_tokens: tokens + 12,
-      },
-      latency_ms: latency,
+      usage,
+      latency_ms: latencyMs,
     },
     null,
     2
   );
+}
 
 // ---------------------------------------------------------------------------
 // Page
@@ -113,7 +110,7 @@ export default function PlaygroundPage() {
   const [temperature, setTemperature] = useState(0.7);
   const [topP, setTopP] = useState(0.9);
 
-  // Image generation state
+  // Image generation state (mock)
   const [imagePrompt, setImagePrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
   const [imgWidth, setImgWidth] = useState(1024);
@@ -126,34 +123,226 @@ export default function PlaygroundPage() {
   const [output, setOutput] = useState("");
   const [imageGenerated, setImageGenerated] = useState(false);
   const [tokenCount, setTokenCount] = useState<number | null>(null);
+  const [promptTokenCount, setPromptTokenCount] = useState<number | null>(null);
   const [latency, setLatency] = useState<number | null>(null);
   const [jsonTab, setJsonTab] = useState<"request" | "response">("request");
+  const [responseId, setResponseId] = useState<string | null>(null);
+  const [finishReason, setFinishReason] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Abort controller for cancelling streams
+  const abortRef = useRef<AbortController | null>(null);
 
   const isTextMode = selectedEndpoint.type === "text";
 
-  const handleGenerate = useCallback(() => {
+  // ---------------------------------------------------------------------------
+  // Real streaming generation for text models
+  // ---------------------------------------------------------------------------
+
+  const handleTextGenerate = useCallback(async () => {
+    setGenerating(true);
+    setOutput("");
+    setTokenCount(null);
+    setPromptTokenCount(null);
+    setLatency(null);
+    setResponseId(null);
+    setFinishReason(null);
+    setErrorMessage(null);
+    setJsonTab("response");
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    const startTime = performance.now();
+
+    try {
+      const response = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: selectedEndpoint.id,
+          messages: [{ role: "user", content: prompt }],
+          max_tokens: maxTokens,
+          temperature,
+          top_p: topP,
+          stream: true,
+        }),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.json();
+        const msg = errorBody?.error?.message ?? "Request failed";
+        setErrorMessage(msg);
+        setGenerating(false);
+        return;
+      }
+
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let fullText = "";
+      let lastId = "";
+      let lastFinishReason = "";
+      let lastUsage = { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
+      let lastLatencyMs = 0;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || !trimmed.startsWith("data: ")) continue;
+
+          const payload = trimmed.slice(6);
+          if (payload === "[DONE]") continue;
+
+          try {
+            const chunk = JSON.parse(payload);
+
+            if (chunk.id) lastId = chunk.id;
+
+            const delta = chunk.choices?.[0]?.delta;
+            if (delta?.content) {
+              fullText += delta.content;
+              setOutput(fullText);
+            }
+
+            if (chunk.choices?.[0]?.finish_reason) {
+              lastFinishReason = chunk.choices[0].finish_reason;
+            }
+
+            if (chunk.usage) {
+              lastUsage = chunk.usage;
+            }
+
+            if (chunk.latency_ms) {
+              lastLatencyMs = chunk.latency_ms;
+            }
+          } catch {
+            // Skip malformed SSE chunks
+          }
+        }
+      }
+
+      // Use server-reported latency if available, otherwise measure client-side
+      const clientLatency = Math.round(performance.now() - startTime);
+      const reportedLatency = lastLatencyMs > 0 ? lastLatencyMs : clientLatency;
+
+      setResponseId(lastId);
+      setFinishReason(lastFinishReason || "stop");
+      setLatency(reportedLatency);
+      setTokenCount(lastUsage.completion_tokens || null);
+      setPromptTokenCount(lastUsage.prompt_tokens || null);
+    } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") {
+        // User cancelled
+        setFinishReason("cancelled");
+      } else {
+        setErrorMessage(err instanceof Error ? err.message : "Unknown error");
+      }
+    } finally {
+      setGenerating(false);
+      abortRef.current = null;
+    }
+  }, [prompt, maxTokens, temperature, topP, selectedEndpoint.id]);
+
+  // ---------------------------------------------------------------------------
+  // Mock generation for image endpoint
+  // ---------------------------------------------------------------------------
+
+  const handleImageGenerate = useCallback(() => {
     setGenerating(true);
     setOutput("");
     setImageGenerated(false);
-    setTokenCount(null);
     setLatency(null);
+    setErrorMessage(null);
 
-    const delay = isTextMode
-      ? 1200 + Math.random() * 800
-      : 2000 + Math.random() * 1000;
-
+    const delay = 2000 + Math.random() * 1000;
     setTimeout(() => {
-      if (isTextMode) {
-        setOutput(MOCK_TEXT_RESPONSE);
-        setTokenCount(87);
-        setLatency(Math.round(delay));
-      } else {
-        setImageGenerated(true);
-        setLatency(Math.round(delay));
-      }
+      setImageGenerated(true);
+      setLatency(Math.round(delay));
       setGenerating(false);
     }, delay);
-  }, [isTextMode]);
+  }, []);
+
+  const handleGenerate = useCallback(() => {
+    if (isTextMode) {
+      handleTextGenerate();
+    } else {
+      handleImageGenerate();
+    }
+  }, [isTextMode, handleTextGenerate, handleImageGenerate]);
+
+  const handleStop = useCallback(() => {
+    abortRef.current?.abort();
+  }, []);
+
+  // ---------------------------------------------------------------------------
+  // JSON panel content
+  // ---------------------------------------------------------------------------
+
+  const requestJsonContent = isTextMode
+    ? formatRequestJson(
+        selectedEndpoint.id,
+        [{ role: "user", content: prompt || "Hello, how are you?" }],
+        maxTokens,
+        temperature,
+        topP,
+        true
+      )
+    : JSON.stringify(
+        {
+          prompt: imagePrompt || "A beautiful landscape",
+          negative_prompt: negativePrompt || "",
+          width: imgWidth,
+          height: imgHeight,
+          steps,
+          guidance_scale: guidanceScale,
+        },
+        null,
+        2
+      );
+
+  const responseJsonContent =
+    isTextMode && (output || errorMessage)
+      ? errorMessage
+        ? JSON.stringify({ error: { message: errorMessage, code: "inference_error" } }, null, 2)
+        : formatResponseJson(
+            responseId ?? "gh_gen_...",
+            selectedEndpoint.id,
+            output,
+            finishReason ?? "stop",
+            {
+              prompt_tokens: promptTokenCount ?? 0,
+              completion_tokens: tokenCount ?? 0,
+              total_tokens: (promptTokenCount ?? 0) + (tokenCount ?? 0),
+            },
+            latency ?? 0
+          )
+      : !isTextMode && imageGenerated
+        ? JSON.stringify(
+            {
+              id: "gh_img_" + Math.random().toString(36).slice(2, 10),
+              object: "gatehouse.image_generation",
+              created: Math.floor(Date.now() / 1000),
+              data: [
+                {
+                  url: "https://api.gatehouse.cloud/v1/images/img_abc123.png",
+                  revised_prompt: imagePrompt,
+                },
+              ],
+              latency_ms: latency,
+            },
+            null,
+            2
+          )
+        : "// Generate a response to see output here";
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -172,7 +361,7 @@ export default function PlaygroundPage() {
           Model Playground
         </h1>
         <p className="mt-1 text-muted-foreground">
-          Test your deployed model endpoints interactively.
+          Test Gatehouse AI models interactively with real inference.
         </p>
       </div>
 
@@ -222,7 +411,11 @@ export default function PlaygroundPage() {
                           setOutput("");
                           setImageGenerated(false);
                           setTokenCount(null);
+                          setPromptTokenCount(null);
                           setLatency(null);
+                          setResponseId(null);
+                          setFinishReason(null);
+                          setErrorMessage(null);
                         }}
                         className={cn(
                           "flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-mist",
@@ -316,23 +509,35 @@ export default function PlaygroundPage() {
                       />
                     </div>
                   </div>
-                  <Button
-                    onClick={handleGenerate}
-                    disabled={generating || !prompt.trim()}
-                    className="gap-2"
-                  >
-                    {generating ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Play className="h-4 w-4" />
+                  <div className="flex gap-2">
+                    {generating && (
+                      <Button
+                        variant="ghost"
+                        onClick={handleStop}
+                        className="gap-2"
+                      >
+                        <Square className="h-4 w-4" />
+                        Stop
+                      </Button>
                     )}
-                    Generate
-                  </Button>
+                    <Button
+                      onClick={handleGenerate}
+                      disabled={generating || !prompt.trim()}
+                      className="gap-2"
+                    >
+                      {generating ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Play className="h-4 w-4" />
+                      )}
+                      Generate
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           ) : (
-            /* Image generation input */
+            /* Image generation input (mock) */
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
@@ -449,28 +654,28 @@ export default function PlaygroundPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">Output</CardTitle>
-                {tokenCount !== null && latency !== null && (
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3">
+                  {isTextMode && tokenCount !== null && (
                     <Badge variant="default" className="gap-1">
                       <Hash className="h-3 w-3" />
                       {tokenCount} tokens
                     </Badge>
+                  )}
+                  {latency !== null && (
                     <Badge variant="default" className="gap-1">
                       <Clock className="h-3 w-3" />
                       {latency}ms
                     </Badge>
-                  </div>
-                )}
-                {!isTextMode && latency !== null && (
-                  <Badge variant="default" className="gap-1">
-                    <Clock className="h-3 w-3" />
-                    {latency}ms
-                  </Badge>
-                )}
+                  )}
+                </div>
               </div>
             </CardHeader>
             <CardContent>
-              {generating ? (
+              {errorMessage ? (
+                <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+                  <p className="text-sm text-red-400">{errorMessage}</p>
+                </div>
+              ) : generating && !output ? (
                 <div className="flex items-center justify-center py-12">
                   <div className="flex flex-col items-center gap-3">
                     <Loader2 className="h-8 w-8 animate-spin text-forest" />
@@ -483,6 +688,9 @@ export default function PlaygroundPage() {
                 <div className="rounded-lg border border-border bg-background p-4">
                   <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-foreground/90">
                     {output}
+                    {generating && (
+                      <span className="inline-block w-2 h-4 ml-0.5 bg-forest/70 animate-pulse" />
+                    )}
                   </pre>
                 </div>
               ) : !isTextMode && imageGenerated ? (
@@ -510,7 +718,7 @@ export default function PlaygroundPage() {
                   <Play className="mb-3 h-8 w-8 text-muted-foreground/30" />
                   <p className="text-sm text-muted-foreground">
                     {isTextMode
-                      ? "Enter a prompt and click Generate to test your endpoint."
+                      ? "Enter a prompt and click Generate to test Gatehouse AI inference."
                       : "Describe an image and click Generate to test your endpoint."}
                   </p>
                 </div>
@@ -549,47 +757,8 @@ export default function PlaygroundPage() {
             <CardContent>
               <pre className="max-h-[500px] overflow-auto rounded-lg border border-border bg-background p-3 font-mono text-xs leading-relaxed text-foreground/80">
                 {jsonTab === "request"
-                  ? isTextMode
-                    ? MOCK_REQUEST_JSON(
-                        prompt || "Hello, how are you?",
-                        maxTokens,
-                        temperature,
-                        topP
-                      )
-                    : JSON.stringify(
-                        {
-                          prompt: imagePrompt || "A beautiful landscape",
-                          negative_prompt: negativePrompt || "",
-                          width: imgWidth,
-                          height: imgHeight,
-                          steps,
-                          guidance_scale: guidanceScale,
-                        },
-                        null,
-                        2
-                      )
-                  : output || imageGenerated
-                    ? isTextMode
-                      ? MOCK_RESPONSE_JSON(output, tokenCount ?? 0, latency ?? 0)
-                      : JSON.stringify(
-                          {
-                            id:
-                              "img_" +
-                              Math.random().toString(36).slice(2, 10),
-                            object: "image_generation",
-                            created: Math.floor(Date.now() / 1000),
-                            data: [
-                              {
-                                url: "https://api.gatehouse.cloud/v1/images/img_abc123.png",
-                                revised_prompt: imagePrompt,
-                              },
-                            ],
-                            latency_ms: latency,
-                          },
-                          null,
-                          2
-                        )
-                    : "// Generate a response to see output here"}
+                  ? requestJsonContent
+                  : responseJsonContent}
               </pre>
             </CardContent>
           </Card>

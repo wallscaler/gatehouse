@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { mockResources, mockHeartbeats } from "@/lib/compute/mock-data";
+import { obfuscateResource } from "@/lib/compute/obfuscation";
 import type { ComputeResourceFilters } from "@/lib/compute/types";
 
 export async function GET(request: Request) {
@@ -77,11 +78,13 @@ export async function GET(request: Request) {
     const start = (page - 1) * limit;
     const paginated = resources.slice(start, start + limit);
 
-    // Attach heartbeat status to each resource
+    // Obfuscate resources for public API response
+    // Raw hardware details, provider names, and IPs are masked
     const data = paginated.map((resource) => {
       const heartbeat = mockHeartbeats.find((h) => h.resourceId === resource.id);
+      const obfuscated = obfuscateResource(resource);
       return {
-        ...resource,
+        ...obfuscated,
         isOnline: heartbeat?.isOnline ?? false,
         health: heartbeat?.health ?? "critical",
       };

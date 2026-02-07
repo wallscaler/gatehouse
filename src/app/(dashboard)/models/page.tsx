@@ -21,6 +21,7 @@ import {
   Code,
   Type,
   Image,
+  Zap,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -44,35 +45,64 @@ interface AIModel {
   license: string;
   description: string;
   popular: boolean;
+  gatehouseOptimized: boolean;
 }
 
 // ---------------------------------------------------------------------------
-// Mock data
+// Model data — Gatehouse Optimized models first, then community
 // ---------------------------------------------------------------------------
 
 const MOCK_MODELS: AIModel[] = [
+  // Gatehouse Optimized (real inference backing)
   {
-    id: "llama-3.2-3b",
-    name: "Llama 3.2 3B",
-    creator: "Meta",
+    id: "llama-3.3-70b",
+    name: "Llama 3.3 70B",
+    creator: "Gatehouse AI",
     category: "Text Generation",
-    params: "3B",
-    license: "Apache 2.0",
+    params: "70B",
+    license: "Gatehouse Inference",
     description:
-      "Compact yet powerful language model optimized for efficient text generation with strong multilingual support.",
+      "Flagship text model with excellent reasoning and instruction-following across diverse tasks.",
     popular: true,
+    gatehouseOptimized: true,
   },
   {
     id: "llama-3.1-8b",
     name: "Llama 3.1 8B",
-    creator: "Meta",
+    creator: "Gatehouse AI",
     category: "Text Generation",
     params: "8B",
-    license: "Llama",
+    license: "Gatehouse Inference",
     description:
-      "Versatile 8B parameter model with excellent reasoning and instruction-following capabilities.",
-    popular: false,
+      "Fast, lightweight model optimized for low-latency responses with strong general capabilities.",
+    popular: true,
+    gatehouseOptimized: true,
   },
+  {
+    id: "mixtral-8x7b",
+    name: "Mixtral 8x7B",
+    creator: "Gatehouse AI",
+    category: "Text Generation",
+    params: "46.7B (MoE)",
+    license: "Gatehouse Inference",
+    description:
+      "Mixture-of-experts architecture delivering strong reasoning and analytical performance.",
+    popular: false,
+    gatehouseOptimized: true,
+  },
+  {
+    id: "gemma2-9b",
+    name: "Gemma 2 9B",
+    creator: "Gatehouse AI",
+    category: "Text Generation",
+    params: "9B",
+    license: "Gatehouse Inference",
+    description:
+      "Efficient instruction-tuned model with strong performance for its size class.",
+    popular: false,
+    gatehouseOptimized: true,
+  },
+  // Community / self-hosted models
   {
     id: "mistral-7b-v0.3",
     name: "Mistral 7B v0.3",
@@ -83,17 +113,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "High-performance 7B model with sliding window attention, excelling at coding and reasoning tasks.",
     popular: true,
-  },
-  {
-    id: "mixtral-8x7b",
-    name: "Mixtral 8x7B",
-    creator: "Mistral AI",
-    category: "Text Generation",
-    params: "46.7B (MoE)",
-    license: "Apache 2.0",
-    description:
-      "Mixture-of-experts architecture delivering GPT-3.5 level performance with efficient sparse inference.",
-    popular: false,
+    gatehouseOptimized: false,
   },
   {
     id: "deepseek-coder-v2",
@@ -105,6 +125,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Specialized code generation model supporting 338+ programming languages with fill-in-the-middle capability.",
     popular: false,
+    gatehouseOptimized: false,
   },
   {
     id: "qwen-2.5-7b",
@@ -116,6 +137,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Strong general-purpose model with excellent performance on benchmarks and multilingual understanding.",
     popular: false,
+    gatehouseOptimized: false,
   },
   {
     id: "stable-diffusion-xl",
@@ -127,6 +149,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Industry-leading image generation model producing photorealistic and artistic images from text prompts.",
     popular: true,
+    gatehouseOptimized: false,
   },
   {
     id: "flux-1-schnell",
@@ -138,6 +161,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Ultra-fast image generation model delivering high-quality outputs with significantly reduced inference time.",
     popular: false,
+    gatehouseOptimized: false,
   },
   {
     id: "whisper-large-v3",
@@ -149,6 +173,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "State-of-the-art speech recognition model supporting 100+ languages with robust transcription accuracy.",
     popular: false,
+    gatehouseOptimized: false,
   },
   {
     id: "bge-m3",
@@ -160,6 +185,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Multilingual embedding model supporting 100+ languages, ideal for semantic search and RAG pipelines.",
     popular: false,
+    gatehouseOptimized: false,
   },
   {
     id: "llava-1.6",
@@ -171,6 +197,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Multimodal vision-language model capable of understanding images and answering questions about visual content.",
     popular: false,
+    gatehouseOptimized: false,
   },
   {
     id: "codellama-34b",
@@ -182,6 +209,7 @@ const MOCK_MODELS: AIModel[] = [
     description:
       "Large-scale code-specialized model excelling at code completion, generation, and understanding across languages.",
     popular: false,
+    gatehouseOptimized: false,
   },
 ];
 
@@ -283,7 +311,7 @@ export default function ModelHubPage() {
         {[
           {
             label: "Available Models",
-            value: "24",
+            value: String(MOCK_MODELS.length),
             icon: Box,
             iconClass: "text-forest",
           },
@@ -403,18 +431,29 @@ export default function ModelHubPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((model) => (
             <Link key={model.id} href={`/models/${model.id}`}>
-              <Card className="group h-full transition-colors hover:border-forest/40">
+              <Card className={cn(
+                "group h-full transition-colors hover:border-forest/40",
+                model.gatehouseOptimized && "border-forest/20"
+              )}>
                 <CardContent className="flex h-full flex-col p-5">
-                  {/* Top row: category + popular */}
+                  {/* Top row: category + badges */}
                   <div className="mb-3 flex items-center justify-between">
-                    <div
-                      className={cn(
-                        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold",
-                        categoryBadgeClass(model.category)
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={cn(
+                          "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold",
+                          categoryBadgeClass(model.category)
+                        )}
+                      >
+                        {categoryIcon(model.category)}
+                        {model.category}
+                      </div>
+                      {model.gatehouseOptimized && (
+                        <div className="inline-flex items-center gap-1 rounded-full bg-forest/15 px-2 py-0.5 text-xs font-semibold text-forest">
+                          <Zap className="h-3 w-3" />
+                          Gatehouse Optimized
+                        </div>
                       )}
-                    >
-                      {categoryIcon(model.category)}
-                      {model.category}
                     </div>
                     {model.popular && (
                       <div className="flex items-center gap-1 text-xs font-medium text-copper">
@@ -455,10 +494,14 @@ export default function ModelHubPage() {
                       className="h-7 px-3 text-xs"
                       onClick={(e) => {
                         e.preventDefault();
-                        window.location.href = `/models/${model.id}`;
+                        if (model.gatehouseOptimized) {
+                          window.location.href = "/models/playground";
+                        } else {
+                          window.location.href = `/models/${model.id}`;
+                        }
                       }}
                     >
-                      Deploy
+                      {model.gatehouseOptimized ? "Try Now" : "Deploy"}
                     </Button>
                   </div>
                 </CardContent>

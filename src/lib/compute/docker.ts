@@ -1,8 +1,10 @@
 // ─── Docker Deployment Service ───────────────────────────────
 // Generates Docker run commands, docker-compose configs, and
 // container naming conventions for compute resource deployments.
+// Includes Gatehouse branding injection as part of the deploy pipeline.
 
 import { TEMPLATE_CATEGORIES } from "./constants";
+import { generateBrandingOneliner } from "./branding";
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -208,4 +210,60 @@ export function generateContainerName(
   const userSuffix = userId.replace(/-/g, "").slice(0, 8);
 
   return `${sanitized}-${userSuffix}`;
+}
+
+// ─── Branding Integration ────────────────────────────────────
+
+/**
+ * Generate a full deployment pipeline that includes:
+ * 1. Docker container start
+ * 2. Wait for container to be healthy
+ * 3. Inject Gatehouse branding via docker exec
+ *
+ * This ensures users always see Gatehouse branding when they SSH in.
+ */
+export function generateBrandedDeployScript(
+  config: DeploymentConfig,
+  containerName: string,
+  instanceId: string,
+  region: string,
+  plan: string,
+  expiresAt: string,
+  username: string,
+): string {
+  const dockerRun = generateDockerRunCommand(config, containerName);
+  const brandingCmd = generateBrandingOneliner({
+    instanceId,
+    region,
+    plan,
+    expiresAt,
+    username,
+  });
+
+  return `#!/bin/bash
+set -e
+
+echo "[Gatehouse] Starting container deployment..."
+
+# Step 1: Deploy the container
+${dockerRun}
+
+echo "[Gatehouse] Container started. Waiting for initialization..."
+
+# Step 2: Wait for the container to be running
+for i in $(seq 1 30); do
+  STATUS=$(docker inspect -f '{{.State.Running}}' ${containerName} 2>/dev/null || echo "false")
+  if [ "$STATUS" = "true" ]; then
+    break
+  fi
+  sleep 2
+done
+
+echo "[Gatehouse] Container is running. Applying branding..."
+
+# Step 3: Inject Gatehouse branding
+docker exec ${containerName} bash -c '${brandingCmd.replace(/'/g, "'\\''")}'
+
+echo "[Gatehouse] Deployment complete. Instance ${instanceId} is ready."
+`;
 }
